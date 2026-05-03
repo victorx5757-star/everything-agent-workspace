@@ -30,10 +30,12 @@ import {
 } from "@multica/core/workspace/queries";
 import { api } from "@multica/core/api";
 import { paths } from "@multica/core/paths";
+import { useTranslation } from "@multica/core/i18n";
 import type { Workspace } from "@multica/core/types";
 import { useNavigation } from "../../navigation";
 
 export function WorkspaceTab() {
+  const { t } = useTranslation();
   const user = useAuthStore((s) => s.user);
   const workspace = useCurrentWorkspace();
   const wsId = useWorkspaceId();
@@ -43,12 +45,6 @@ export function WorkspaceTab() {
   const deleteWorkspace = useDeleteWorkspace();
   const navigation = useNavigation();
 
-  /**
-   * After leaving/deleting the current workspace, send the user to a safe URL:
-   * another workspace they still have access to, or onboarding if they have none.
-   * The list is freshly fetched (staleTime: 0) because the cache still contains
-   * the just-removed workspace until the background invalidation resolves.
-   */
   const navigateAwayFromCurrentWorkspace = async () => {
     const wsList = await qc.fetchQuery({
       ...workspaceListOptions(),
@@ -95,9 +91,9 @@ export function WorkspaceTab() {
       qc.setQueryData(workspaceKeys.list(), (old: Workspace[] | undefined) =>
         old?.map((ws) => (ws.id === updated.id ? updated : ws)),
       );
-      toast.success("Workspace settings saved");
+      toast.success(t.settings.workspace.saved);
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to save workspace settings");
+      toast.error(e instanceof Error ? e.message : t.settings.workspace.failedToSave);
     } finally {
       setSaving(false);
     }
@@ -106,8 +102,8 @@ export function WorkspaceTab() {
   const handleLeaveWorkspace = () => {
     if (!workspace) return;
     setConfirmAction({
-      title: "Leave workspace",
-      description: `Leave ${workspace.name}? You will lose access until re-invited.`,
+      title: t.settings.workspace.leaveTitle,
+      description: t.settings.workspace.leaveConfirmDescription.replace("{name}", workspace.name),
       variant: "destructive",
       onConfirm: async () => {
         setActionId("leave");
@@ -115,7 +111,7 @@ export function WorkspaceTab() {
           await leaveWorkspace.mutateAsync(workspace.id);
           await navigateAwayFromCurrentWorkspace();
         } catch (e) {
-          toast.error(e instanceof Error ? e.message : "Failed to leave workspace");
+          toast.error(e instanceof Error ? e.message : t.settings.workspace.failedToLeave);
         } finally {
           setActionId(null);
         }
@@ -126,8 +122,8 @@ export function WorkspaceTab() {
   const handleDeleteWorkspace = () => {
     if (!workspace) return;
     setConfirmAction({
-      title: "Delete workspace",
-      description: `Delete ${workspace.name}? This cannot be undone. All issues, agents, and data will be permanently removed.`,
+      title: t.settings.workspace.deleteTitle,
+      description: t.settings.workspace.deleteConfirmDescription.replace("{name}", workspace.name),
       variant: "destructive",
       onConfirm: async () => {
         setActionId("delete-workspace");
@@ -135,7 +131,7 @@ export function WorkspaceTab() {
           await deleteWorkspace.mutateAsync(workspace.id);
           await navigateAwayFromCurrentWorkspace();
         } catch (e) {
-          toast.error(e instanceof Error ? e.message : "Failed to delete workspace");
+          toast.error(e instanceof Error ? e.message : t.settings.workspace.failedToDelete);
         } finally {
           setActionId(null);
         }
@@ -149,12 +145,12 @@ export function WorkspaceTab() {
     <div className="space-y-8">
       {/* Workspace settings */}
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">General</h2>
+        <h2 className="text-sm font-semibold">{t.settings.workspace.general}</h2>
 
         <Card>
           <CardContent className="space-y-3">
             <div>
-              <Label className="text-xs text-muted-foreground">Name</Label>
+              <Label className="text-xs text-muted-foreground">{t.settings.workspace.name}</Label>
               <Input
                 type="text"
                 value={name}
@@ -164,29 +160,29 @@ export function WorkspaceTab() {
               />
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">Description</Label>
+              <Label className="text-xs text-muted-foreground">{t.settings.workspace.description}</Label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
                 disabled={!canManageWorkspace}
                 className="mt-1 resize-none"
-                placeholder="What does this workspace focus on?"
+                placeholder={t.settings.workspace.descriptionPlaceholder}
               />
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">Context</Label>
+              <Label className="text-xs text-muted-foreground">{t.settings.workspace.context}</Label>
               <Textarea
                 value={context}
                 onChange={(e) => setContext(e.target.value)}
                 rows={4}
                 disabled={!canManageWorkspace}
                 className="mt-1 resize-none"
-                placeholder="Background information and context for AI agents working in this workspace"
+                placeholder={t.settings.workspace.contextPlaceholder}
               />
             </div>
             <div>
-              <Label className="text-xs text-muted-foreground">Slug</Label>
+              <Label className="text-xs text-muted-foreground">{t.settings.workspace.slug}</Label>
               <div className="mt-1 rounded-md border bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
                 {workspace.slug}
               </div>
@@ -198,12 +194,12 @@ export function WorkspaceTab() {
                 disabled={saving || !name.trim() || !canManageWorkspace}
               >
                 <Save className="h-3 w-3" />
-                {saving ? "Saving..." : "Save"}
+                {saving ? t.settings.workspace.saving : t.settings.workspace.save}
               </Button>
             </div>
             {!canManageWorkspace && (
               <p className="text-xs text-muted-foreground">
-                Only admins and owners can update workspace settings.
+                {t.settings.workspace.permissionDenied}
               </p>
             )}
           </CardContent>
@@ -214,16 +210,16 @@ export function WorkspaceTab() {
       <section className="space-y-4">
         <div className="flex items-center gap-2">
           <LogOut className="h-4 w-4 text-muted-foreground" />
-          <h2 className="text-sm font-semibold">Danger Zone</h2>
+          <h2 className="text-sm font-semibold">{t.settings.workspace.dangerZone}</h2>
         </div>
 
         <Card>
           <CardContent className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <p className="text-sm font-medium">Leave workspace</p>
+                <p className="text-sm font-medium">{t.settings.workspace.leaveWorkspace}</p>
                 <p className="text-xs text-muted-foreground">
-                  Remove yourself from this workspace.
+                  {t.settings.workspace.leaveDescription}
                 </p>
               </div>
               <Button
@@ -232,16 +228,16 @@ export function WorkspaceTab() {
                 onClick={handleLeaveWorkspace}
                 disabled={actionId === "leave"}
               >
-                {actionId === "leave" ? "Leaving..." : "Leave workspace"}
+                {actionId === "leave" ? t.settings.workspace.leaving : t.settings.workspace.leaveWorkspace}
               </Button>
             </div>
 
             {isOwner && (
               <div className="flex flex-col gap-2 border-t pt-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-sm font-medium text-destructive">Delete workspace</p>
+                  <p className="text-sm font-medium text-destructive">{t.settings.workspace.deleteWorkspace}</p>
                   <p className="text-xs text-muted-foreground">
-                    Permanently delete this workspace and its data.
+                    {t.settings.workspace.deleteDescription}
                   </p>
                 </div>
                 <Button
@@ -250,7 +246,7 @@ export function WorkspaceTab() {
                   onClick={handleDeleteWorkspace}
                   disabled={actionId === "delete-workspace"}
                 >
-                  {actionId === "delete-workspace" ? "Deleting..." : "Delete workspace"}
+                  {actionId === "delete-workspace" ? t.settings.workspace.deleting : t.settings.workspace.deleteWorkspace}
                 </Button>
               </div>
             )}
@@ -265,7 +261,7 @@ export function WorkspaceTab() {
             <AlertDialogDescription>{confirmAction?.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t.settings.workspace.cancel}</AlertDialogCancel>
             <AlertDialogAction
               variant={confirmAction?.variant === "destructive" ? "destructive" : "default"}
               onClick={async () => {
@@ -273,7 +269,7 @@ export function WorkspaceTab() {
                 setConfirmAction(null);
               }}
             >
-              Confirm
+              {t.settings.workspace.confirm}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

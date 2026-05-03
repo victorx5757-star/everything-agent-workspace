@@ -63,6 +63,7 @@
     "./logger": "./logger.ts",
     "./utils": "./utils.ts",
     "./constants/*": "./constants/*.ts",
+    "./i18n": "./i18n/index.ts",
     "./platform": "./platform/index.ts"
   },
   "dependencies": {

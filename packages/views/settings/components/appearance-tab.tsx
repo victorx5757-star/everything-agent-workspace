@@ -2,6 +2,8 @@
 
 import { useTheme } from "@multica/ui/components/common/theme-provider";
 import { cn } from "@multica/ui/lib/utils";
+import { useTranslation, locales, localeLabels } from "@multica/core/i18n";
+import type { Locale } from "@multica/core/i18n";
 
 const LIGHT_COLORS = {
   titleBar: "#e8e8e8",
@@ -79,19 +81,25 @@ function WindowMockup({
 }
 
 const themeOptions = [
-  { value: "light" as const, label: "Light" },
-  { value: "dark" as const, label: "Dark" },
-  { value: "system" as const, label: "System" },
+  { value: "light" as const },
+  { value: "dark" as const },
+  { value: "system" as const },
 ];
 
 export function AppearanceTab() {
   const { theme, setTheme } = useTheme();
+  const { t, locale, setLocale } = useTranslation();
+
+  const themeLabel = (v: "light" | "dark" | "system") =>
+    v === "light" ? t.settings.appearance.light
+    : v === "dark" ? t.settings.appearance.dark
+    : t.settings.appearance.system;
 
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">Theme</h2>
-        <div className="flex gap-6" role="radiogroup" aria-label="Theme">
+        <h2 className="text-sm font-semibold">{t.settings.appearance.theme}</h2>
+        <div className="flex gap-6" role="radiogroup" aria-label={t.settings.appearance.theme}>
           {themeOptions.map((opt) => {
             const active = theme === opt.value;
             return (
@@ -99,7 +107,7 @@ export function AppearanceTab() {
                 key={opt.value}
                 role="radio"
                 aria-checked={active}
-                aria-label={`Select ${opt.label} theme`}
+                aria-label={`${t.settings.appearance.theme}: ${themeLabel(opt.value)}`}
                 onClick={() => setTheme(opt.value)}
                 className="group flex flex-col items-center gap-2"
               >
@@ -134,8 +142,33 @@ export function AppearanceTab() {
                       : "text-muted-foreground"
                   )}
                 >
-                  {opt.label}
+                  {themeLabel(opt.value)}
                 </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h2 className="text-sm font-semibold">{t.settings.appearance.language}</h2>
+        <div className="flex gap-4" role="radiogroup" aria-label={t.settings.appearance.language}>
+          {locales.map((l: Locale) => {
+            const active = locale === l;
+            return (
+              <button
+                key={l}
+                role="radio"
+                aria-checked={active}
+                onClick={() => setLocale(l)}
+                className={cn(
+                  "rounded-lg border px-6 py-3 text-sm transition-all",
+                  active
+                    ? "border-brand ring-2 ring-brand font-medium"
+                    : "border-border text-muted-foreground hover:border-foreground/20"
+                )}
+              >
+                {localeLabels[l]}
               </button>
             );
           })}

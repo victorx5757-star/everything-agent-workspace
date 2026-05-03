@@ -3,7 +3,8 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import { en } from "./en";
 import { zh } from "./zh";
-import type { LandingDict, Locale } from "./types";
+import type { LandingDict } from "./types";
+import type { Locale } from "@multica/core/i18n";
 
 const dictionaries: Record<Locale, LandingDict> = { en, zh };
 
