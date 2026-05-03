@@ -1,0 +1,70 @@
+{
+  "welcome": "Welcome to Multica",
+  "getStarted": "Get started",
+  "skipForNow": "Skip for now",
+  "createWorkspace": "Create your first workspace",
+  "createWorkspaceDescription": "Create your workspace to start building with AI agents.",
+  "setupRuntime": "Connect a Runtime",
+  "setupRuntimeDescription": "Install the CLI and run the setup command below to connect your machine. The daemon auto-detects agent CLIs (Claude Code, Codex, etc.) on your PATH.",
+  "runtimesConnected": "{{count}} runtime connected",
+  "runtimesConnected_plural": "{{count}} runtimes connected",
+  "waitingForConnection": "Waiting for connection...",
+  "createAgent": "Create Your First Agent",
+  "agentTemplateDescription": "Choose a template to get started, then customize your agent.",
+  "noRuntimeWarning": "No runtime connected. Go back to connect a runtime, or skip and set one up later.",
+  "noRuntimeAvailable": "No runtime available",
+  "connectRuntimeFirst": "Connect a runtime first",
+  "createAgentButton": "Create Agent",
+  "backToTemplates": "Back to templates",
+  "fields": {
+    "workspaceName": "Workspace name",
+    "workspaceNameLabel": "Workspace Name",
+    "workspaceUrl": "Workspace URL",
+    "runtimeName": "Runtime",
+    "provider": "Provider",
+    "model": "Model",
+    "agentName": "Agent Name",
+    "instructions": "Instructions"
+  },
+  "placeholders": {
+    "workspaceName": "What's your workspace called?",
+    "workspaceUrl": "Choose a URL for your workspace",
+    "runtimeName": "Give your runtime a name",
+    "provider": "Select your AI provider",
+    "model": "Choose your model",
+    "agentName": "e.g. Coding Agent",
+    "instructions": "What should this agent do?"
+  },
+  "messages": {
+    "chooseDifferentUrl": "Choose a different workspace URL",
+    "failedToCreateWorkspace": "Failed to create workspace",
+    "failedToCreateAgent": "Failed to create agent"
+  },
+  "visibility": {
+    "workspace": "Workspace",
+    "private": "Private",
+    "allMembers": "All members can assign",
+    "onlyYou": "Only you can assign"
+  },
+  "completeSetup": "Complete setup",
+  "allSet": "You're all set!",
+  "workspaceReady": "Your workspace is ready",
+  "workspaceReadyWithAgent": "Your workspace is ready and {{name}} is picking up its first task.",
+  "settingUpWorkspace": "Setting up your workspace...",
+  "assignedTo": "Assigned to {{name}}",
+  "backlog": "Backlog",
+  "goToWorkspace": "Go to Workspace",
+  "creating": "Creating...",
+  "createWorkspaceButton": "Create Workspace",
+  "presets": {
+    "masterAgent": "Master Agent",
+    "codingAgent": "Coding Agent",
+    "masterAgentDescription": "Manages workspace, assigns tasks, and coordinates work",
+    "codingAgentDescription": "Checks out code, implements features, and submits PRs"
+  },
+  "nextSteps": {
+    "repoConnection": "Set up your repository connection",
+    "createSkill": "Create a skill for your agent",
+    "inviteTeammate": "Invite a teammate"
+  }
+}

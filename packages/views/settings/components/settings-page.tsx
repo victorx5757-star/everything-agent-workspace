@@ -26,29 +26,29 @@ interface SettingsPageProps {
 
 export function SettingsPage({ extraAccountTabs }: SettingsPageProps = {}) {
   const workspaceName = useCurrentWorkspace()?.name;
-  const { t } = useTranslation();
+  const { t } = useTranslation('settings');
 
   const accountTabs = [
-    { value: "profile", label: t.settings.tabs.profile, icon: User },
-    { value: "appearance", label: t.settings.tabs.appearance, icon: Palette },
-    { value: "tokens", label: t.settings.tabs.tokens, icon: Key },
+    { value: "profile", label: t('tabs.profile'), icon: User },
+    { value: "appearance", label: t('tabs.appearance'), icon: Palette },
+    { value: "tokens", label: t('tabs.tokens'), icon: Key },
   ];
 
   const workspaceTabs = [
-    { value: "workspace", label: t.settings.tabs.general, icon: Settings },
-    { value: "repositories", label: t.settings.tabs.repositories, icon: FolderGit2 },
-    { value: "members", label: t.settings.tabs.members, icon: Users },
+    { value: "workspace", label: t('tabs.general'), icon: Settings },
+    { value: "repositories", label: t('tabs.repositories'), icon: FolderGit2 },
+    { value: "members", label: t('tabs.members'), icon: Users },
   ];
 
   return (
     <Tabs defaultValue="profile" orientation="vertical" className="flex-1 min-h-0 gap-0">
       {/* Left nav */}
       <div className="w-52 shrink-0 border-r overflow-y-auto p-4">
-        <h1 className="text-sm font-semibold mb-4 px-2">{t.settings.page.title}</h1>
+        <h1 className="text-sm font-semibold mb-4 px-2">{t('page.title')}</h1>
         <TabsList variant="line" className="flex-col items-stretch">
           {/* My Account group */}
           <span className="px-2 pb-1 pt-2 text-xs font-medium text-muted-foreground">
-            {t.settings.page.myAccount}
+            {t('page.myAccount')}
           </span>
           {accountTabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>
@@ -65,7 +65,7 @@ export function SettingsPage({ extraAccountTabs }: SettingsPageProps = {}) {
 
           {/* Workspace group */}
           <span className="px-2 pb-1 pt-4 text-xs font-medium text-muted-foreground truncate">
-            {workspaceName ?? t.settings.page.workspace}
+            {workspaceName ?? t('page.workspace')}
           </span>
           {workspaceTabs.map((tab) => (
             <TabsTrigger key={tab.value} value={tab.value}>

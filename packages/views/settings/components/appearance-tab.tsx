@@ -2,7 +2,7 @@
 
 import { useTheme } from "@multica/ui/components/common/theme-provider";
 import { cn } from "@multica/ui/lib/utils";
-import { useTranslation, locales, localeLabels } from "@multica/core/i18n";
+import { useTranslation, locales, localeLabels, useLocaleStore } from "@multica/core/i18n";
 import type { Locale } from "@multica/core/i18n";
 
 const LIGHT_COLORS = {
@@ -88,18 +88,20 @@ const themeOptions = [
 
 export function AppearanceTab() {
   const { theme, setTheme } = useTheme();
-  const { t, locale, setLocale } = useTranslation();
+  const { t } = useTranslation('settings');
+  const locale = useLocaleStore((s) => s.locale);
+  const setLocale = useLocaleStore((s) => s.setLocale);
 
   const themeLabel = (v: "light" | "dark" | "system") =>
-    v === "light" ? t.settings.appearance.light
-    : v === "dark" ? t.settings.appearance.dark
-    : t.settings.appearance.system;
+    v === "light" ? t('appearance.light')
+    : v === "dark" ? t('appearance.dark')
+    : t('appearance.system');
 
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">{t.settings.appearance.theme}</h2>
-        <div className="flex gap-6" role="radiogroup" aria-label={t.settings.appearance.theme}>
+        <h2 className="text-sm font-semibold">{t('appearance.theme')}</h2>
+        <div className="flex gap-6" role="radiogroup" aria-label={t('appearance.theme')}>
           {themeOptions.map((opt) => {
             const active = theme === opt.value;
             return (
@@ -107,7 +109,7 @@ export function AppearanceTab() {
                 key={opt.value}
                 role="radio"
                 aria-checked={active}
-                aria-label={`${t.settings.appearance.theme}: ${themeLabel(opt.value)}`}
+                aria-label={`${t('appearance.theme')}: ${themeLabel(opt.value)}`}
                 onClick={() => setTheme(opt.value)}
                 className="group flex flex-col items-center gap-2"
               >
@@ -151,8 +153,8 @@ export function AppearanceTab() {
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">{t.settings.appearance.language}</h2>
-        <div className="flex gap-4" role="radiogroup" aria-label={t.settings.appearance.language}>
+        <h2 className="text-sm font-semibold">{t('appearance.language')}</h2>
+        <div className="flex gap-4" role="radiogroup" aria-label={t('appearance.language')}>
           {locales.map((l: Locale) => {
             const active = locale === l;
             return (

@@ -17,6 +17,7 @@ import {
   SheetTitle,
 } from "@multica/ui/components/ui/sheet";
 import type { DaemonStatus, DaemonState } from "../../../shared/daemon-types";
+import { useTranslation } from "@multica/core/i18n";
 import { DAEMON_STATE_COLORS, DAEMON_STATE_LABELS } from "../../../shared/daemon-types";
 
 interface DaemonPanelProps {
@@ -61,6 +62,7 @@ const MAX_LOG_LINES = 500;
 let logIdCounter = 0;
 
 export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
+  const { t } = useTranslation("desktop");
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [autoScroll, setAutoScroll] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
@@ -287,8 +289,8 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
               {logs.length === 0 ? (
                 <p className="text-muted-foreground/50 text-center py-8">
                   {status.state === "running"
-                    ? "Waiting for logs…"
-                    : "Start the daemon to see logs"}
+                    ? t("daemon.waitingForLogs")
+                    : t("daemon.startForLogs")}
                 </p>
               ) : (
                 logs.map((entry) => {

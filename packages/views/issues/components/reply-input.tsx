@@ -7,6 +7,7 @@ import { FileUploadButton } from "@multica/ui/components/common/file-upload-butt
 import { ActorAvatar } from "../../common/actor-avatar";
 import { useFileUpload } from "@multica/core/hooks/use-file-upload";
 import { api } from "@multica/core/api";
+import { useTranslation } from "@multica/core/i18n";
 import { cn } from "@multica/ui/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -28,12 +29,14 @@ interface ReplyInputProps {
 
 function ReplyInput({
   issueId,
-  placeholder = "Leave a reply...",
+  placeholder,
   avatarType,
   avatarId,
   onSubmit,
   size = "default",
 }: ReplyInputProps) {
+  const { t } = useTranslation('issues');
+  const resolvedPlaceholder = placeholder ?? t('replyPlaceholder');
   const editorRef = useRef<ContentEditorRef>(null);
   const measureRef = useRef<HTMLDivElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
@@ -100,7 +103,7 @@ function ReplyInput({
           <div ref={measureRef}>
             <ContentEditor
               ref={editorRef}
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               onUpdate={(md) => setIsEmpty(!md.trim())}
               onSubmit={handleSubmit}
               onUploadFile={handleUpload}

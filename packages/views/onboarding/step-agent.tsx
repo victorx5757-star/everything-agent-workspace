@@ -28,6 +28,7 @@ import type {
   AgentVisibility,
   CreateAgentRequest,
 } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 
 interface AgentTemplate {
   id: string;
@@ -37,24 +38,26 @@ interface AgentTemplate {
   icon: typeof Crown;
 }
 
-const AGENT_TEMPLATES: AgentTemplate[] = [
-  {
-    id: "master",
-    name: "Master Agent",
-    description: "Manages workspace, assigns tasks, and coordinates work",
-    instructions:
-      "You are a Master Agent for this workspace. Your role is to manage and coordinate tasks, triage incoming issues, and ensure work is distributed effectively across the team.",
-    icon: Crown,
-  },
-  {
-    id: "coding",
-    name: "Coding Agent",
-    description: "Checks out code, implements features, and submits PRs",
-    instructions:
-      "You are a Coding Agent. Your role is to check out code repositories, implement features and bug fixes based on issue descriptions, write tests, and submit pull requests.",
-    icon: Code,
-  },
-];
+function getAgentTemplates(t: (key: string) => string): AgentTemplate[] {
+  return [
+    {
+      id: "master",
+      name: t("presets.masterAgent"),
+      description: t("presets.masterAgentDescription"),
+      instructions:
+        "You are a Master Agent for this workspace. Your role is to manage and coordinate tasks, triage incoming issues, and ensure work is distributed effectively across the team.",
+      icon: Crown,
+    },
+    {
+      id: "coding",
+      name: t("presets.codingAgent"),
+      description: t("presets.codingAgentDescription"),
+      instructions:
+        "You are a Coding Agent. Your role is to check out code repositories, implement features and bug fixes based on issue descriptions, write tests, and submit pull requests.",
+      icon: Code,
+    },
+  ];
+}
 
 export function StepAgent({
   wsId,
@@ -65,8 +68,11 @@ export function StepAgent({
   onNext: () => void;
   onAgentCreated: (agent: Agent) => void;
 }) {
+  const { t } = useTranslation("onboarding");
+  const { t: tc } = useTranslation("common");
   const { data: runtimes = [] } = useQuery(runtimeListOptions(wsId));
   const hasRuntime = runtimes.length > 0;
+  const templates = getAgentTemplates(t);
 
   // Template selection
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
@@ -101,7 +107,7 @@ export function StepAgent({
 
   const handleCreate = async () => {
     if (!name.trim() || !selectedRuntime) return;
-    const template = AGENT_TEMPLATES.find((t) => t.id === selectedTemplateId);
+    const template = templates.find((t) => t.id === selectedTemplateId);
     setCreating(true);
     try {
       const req: CreateAgentRequest = {
@@ -116,7 +122,7 @@ export function StepAgent({
       onNext();
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Failed to create agent",
+        err instanceof Error ? err.message : t("messages.failedToCreateAgent"),
       );
       setCreating(false);
     }
@@ -126,10 +132,10 @@ export function StepAgent({
     <div className="flex w-full max-w-lg flex-col items-center gap-8">
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight">
-          Create Your First Agent
+          {t("createAgent")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Choose a template to get started, then customize your agent.
+          {t("agentTemplateDescription")}
         </p>
       </div>
 
@@ -138,8 +144,7 @@ export function StepAgent({
         <div className="flex w-full items-start gap-2 rounded-lg border border-warning/30 bg-warning/5 px-4 py-3 text-sm text-warning">
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
           <p>
-            No runtime connected. Go back to connect a runtime, or skip and set
-            one up later.
+            {t("noRuntimeWarning")}
           </p>
         </div>
       )}
@@ -147,7 +152,7 @@ export function StepAgent({
       {/* Template cards */}
       {!showForm && (
         <div className="grid w-full grid-cols-2 gap-4">
-          {AGENT_TEMPLATES.map((template) => {
+          {templates.map((template) => {
             const Icon = template.icon;
             return (
               <Card
@@ -181,30 +186,30 @@ export function StepAgent({
         <Card className="w-full p-5 space-y-4">
           {/* Name */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Agent Name</Label>
+            <Label className="text-xs text-muted-foreground">{t("fields.agentName")}</Label>
             <Input
               autoFocus
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Coding Agent"
+              placeholder={t("placeholders.agentName")}
             />
           </div>
 
           {/* Description */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Description</Label>
+            <Label className="text-xs text-muted-foreground">{tc("description")}</Label>
             <Input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="What does this agent do?"
+              placeholder={t("placeholders.instructions")}
             />
           </div>
 
           {/* Runtime selector */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Runtime</Label>
+            <Label className="text-xs text-muted-foreground">{t("fields.runtimeName")}</Label>
             <Popover open={runtimeOpen} onOpenChange={setRuntimeOpen}>
               <PopoverTrigger
                 disabled={!hasRuntime}
@@ -221,7 +226,7 @@ export function StepAgent({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="truncate font-medium">
-                      {selectedRuntime?.name ?? "No runtime available"}
+                      {selectedRuntime?.name ?? t("noRuntimeAvailable")}
                     </span>
                     {selectedRuntime?.runtime_mode === "cloud" && (
                       <span className="shrink-0 rounded bg-info/10 px-1.5 py-0.5 text-xs font-medium text-info">
@@ -232,7 +237,7 @@ export function StepAgent({
                   <div className="truncate text-xs text-muted-foreground">
                     {selectedRuntime
                       ? `${selectedRuntime.provider} · ${selectedRuntime.device_info}`
-                      : "Connect a runtime first"}
+                      : t("connectRuntimeFirst")}
                   </div>
                 </div>
                 <ChevronDown
@@ -288,7 +293,7 @@ export function StepAgent({
 
           {/* Visibility */}
           <div className="space-y-1.5">
-            <Label className="text-xs text-muted-foreground">Visibility</Label>
+            <Label className="text-xs text-muted-foreground">{t("fields.workspaceName")}</Label>
             <div className="flex gap-2">
               <button
                 type="button"
@@ -301,9 +306,9 @@ export function StepAgent({
               >
                 <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="text-left">
-                  <div className="font-medium">Workspace</div>
+                  <div className="font-medium">{t("visibility.workspace")}</div>
                   <div className="text-xs text-muted-foreground">
-                    All members can assign
+                    {t("visibility.allMembers")}
                   </div>
                 </div>
               </button>
@@ -318,9 +323,9 @@ export function StepAgent({
               >
                 <Lock className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <div className="text-left">
-                  <div className="font-medium">Private</div>
+                  <div className="font-medium">{t("visibility.private")}</div>
                   <div className="text-xs text-muted-foreground">
-                    Only you can assign
+                    {t("visibility.onlyYou")}
                   </div>
                 </div>
               </button>
@@ -339,7 +344,7 @@ export function StepAgent({
               onClick={handleCreate}
               disabled={creating || !name.trim() || !selectedRuntime}
             >
-              {creating ? "Creating..." : "Create Agent"}
+              {creating ? tc("creating") : t("createAgentButton")}
             </Button>
             <button
               type="button"
@@ -349,7 +354,7 @@ export function StepAgent({
               }}
               className="text-sm text-muted-foreground underline-offset-4 hover:underline"
             >
-              Back to templates
+              {t("backToTemplates")}
             </button>
           </>
         ) : (
@@ -358,7 +363,7 @@ export function StepAgent({
             onClick={onNext}
             className="text-sm text-muted-foreground underline-offset-4 hover:underline"
           >
-            Skip for now
+            {t("skipForNow")}
           </button>
         )}
       </div>

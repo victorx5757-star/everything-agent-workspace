@@ -22,6 +22,7 @@ import { useAuthStore } from "@multica/core/auth";
 import { workspaceKeys } from "@multica/core/workspace/queries";
 import { api } from "@multica/core/api";
 import type { User } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -99,6 +100,8 @@ export function LoginPage({
   onTokenObtained,
   onGoogleLogin,
 }: LoginPageProps) {
+  const { t } = useTranslation("auth");
+  const { t: tc } = useTranslation("common");
   const qc = useQueryClient();
   const [step, setStep] = useState<"email" | "code" | "cli_confirm">("email");
   const [email, setEmail] = useState("");
@@ -158,7 +161,7 @@ export function LoginPage({
     async (e?: React.FormEvent) => {
       e?.preventDefault();
       if (!email) {
-        setError("Email is required");
+        setError(t("login.emailRequired"));
         return;
       }
       setLoading(true);
@@ -172,7 +175,7 @@ export function LoginPage({
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to send code. Make sure the server is running.",
+            : t("login.failedToSendCode"),
         );
       } finally {
         setLoading(false);
@@ -207,7 +210,7 @@ export function LoginPage({
         onSuccess();
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "Invalid or expired code",
+          err instanceof Error ? err.message : t("code.invalidCode"),
         );
         setCode("");
         setLoading(false);
@@ -224,7 +227,7 @@ export function LoginPage({
       setCooldown(60);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to resend code",
+        err instanceof Error ? err.message : t("login.failedToResendCode"),
       );
     }
   };
@@ -250,7 +253,7 @@ export function LoginPage({
       onTokenObtained?.();
       redirectToCliCallback(cliCallback.url, token, cliCallback.state);
     } catch {
-      setError("Failed to authorize CLI. Please log in again.");
+      setError(t("cli.failedToAuthorize"));
       setExistingUser(null);
       setStep("email");
       setLoading(false);
@@ -285,13 +288,9 @@ export function LoginPage({
         <Card className="w-full max-w-sm">
           <CardHeader className="text-center">
             {logo && <div className="mx-auto mb-4">{logo}</div>}
-            <CardTitle className="text-2xl">Authorize CLI</CardTitle>
+            <CardTitle className="text-2xl">{t("cli.authorizeTitle")}</CardTitle>
             <CardDescription>
-              Allow the CLI to access Multica as{" "}
-              <span className="font-medium text-foreground">
-                {existingUser.email}
-              </span>
-              ?
+              {t("cli.authorizeDescription", { email: existingUser.email })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
@@ -301,7 +300,7 @@ export function LoginPage({
               className="w-full"
               size="lg"
             >
-              {loading ? "Authorizing..." : "Authorize"}
+              {loading ? t("cli.authorizing") : t("cli.authorizeButton")}
             </Button>
             <Button
               variant="ghost"
@@ -311,7 +310,7 @@ export function LoginPage({
                 setStep("email");
               }}
             >
-              Use a different account
+              {t("cli.differentAccount")}
             </Button>
           </CardContent>
         </Card>
@@ -329,10 +328,9 @@ export function LoginPage({
         <Card className="w-full max-w-sm">
           <CardHeader className="text-center">
             {logo && <div className="mx-auto mb-4">{logo}</div>}
-            <CardTitle className="text-2xl">Check your email</CardTitle>
+            <CardTitle className="text-2xl">{t("code.title")}</CardTitle>
             <CardDescription>
-              We sent a verification code to{" "}
-              <span className="font-medium text-foreground">{email}</span>
+              {t("code.description", { email })}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center gap-4">
@@ -364,7 +362,7 @@ export function LoginPage({
                 disabled={cooldown > 0}
                 className="text-primary underline-offset-4 hover:underline disabled:text-muted-foreground disabled:no-underline disabled:cursor-not-allowed"
               >
-                {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+                {cooldown > 0 ? t("code.resendIn", { seconds: cooldown }) : t("code.resendCode")}
               </button>
             </div>
           </CardContent>
@@ -379,7 +377,7 @@ export function LoginPage({
                 setError("");
               }}
             >
-              Back
+              {tc("back")}
             </Button>
           </CardFooter>
         </Card>
@@ -396,19 +394,19 @@ export function LoginPage({
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           {logo && <div className="mx-auto mb-4">{logo}</div>}
-          <CardTitle className="text-2xl">Sign in to Multica</CardTitle>
+          <CardTitle className="text-2xl">{t("login.title")}</CardTitle>
           <CardDescription>
-            Enter your email to get a login code
+            {t("login.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form id="login-form" onSubmit={handleSendCode} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="login-email">Email</Label>
+              <Label htmlFor="login-email">{t("login.emailLabel")}</Label>
               <Input
                 id="login-email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t("login.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoFocus
@@ -428,7 +426,7 @@ export function LoginPage({
             size="lg"
             disabled={!email || loading}
           >
-            {loading ? "Sending code..." : "Continue"}
+            {loading ? t("login.sendingCode") : t("login.continueButton")}
           </Button>
           {(google || onGoogleLogin) && (
             <>
@@ -437,7 +435,7 @@ export function LoginPage({
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">or</span>
+                  <span className="bg-card px-2 text-muted-foreground">{t("login.orDivider")}</span>
                 </div>
               </div>
               <Button
@@ -466,7 +464,7 @@ export function LoginPage({
                     fill="#EA4335"
                   />
                 </svg>
-                Continue with Google
+                {t("login.googleButton")}
               </Button>
             </>
           )}

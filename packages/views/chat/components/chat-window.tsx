@@ -29,6 +29,7 @@ import {
 } from "@multica/core/chat/queries";
 import { useCreateChatSession, useMarkChatSessionRead } from "@multica/core/chat/mutations";
 import { useChatStore } from "@multica/core/chat";
+import { useTranslation, i18n } from "@multica/core/i18n";
 import { ChatMessageList, ChatMessageSkeleton } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
 import { ChatResizeHandles } from "./chat-resize-handles";
@@ -40,6 +41,7 @@ const uiLogger = createLogger("chat.ui");
 const apiLogger = createLogger("chat.api");
 
 export function ChatWindow() {
+  const { t } = useTranslation('chat');
   const wsId = useWorkspaceId();
   const isOpen = useChatStore((s) => s.isOpen);
   const activeSessionId = useChatStore((s) => s.activeSessionId);
@@ -331,7 +333,7 @@ export function ChatWindow() {
             >
               <Plus />
             </TooltipTrigger>
-            <TooltipContent side="top">New chat</TooltipContent>
+            <TooltipContent side="top">{t("newChat")}</TooltipContent>
           </Tooltip>
           <SessionDropdown
             sessions={sessions}
@@ -357,7 +359,7 @@ export function ChatWindow() {
               {isAtMax ? <Minimize2 /> : <Maximize2 />}
             </TooltipTrigger>
             <TooltipContent side="top">
-              {isAtMax ? "Restore" : "Expand"}
+              {isAtMax ? t("restore") : t("expand")}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
@@ -373,7 +375,7 @@ export function ChatWindow() {
             >
               <Minus />
             </TooltipTrigger>
-            <TooltipContent side="top">Minimize</TooltipContent>
+            <TooltipContent side="top">{t("minimize")}</TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -443,7 +445,7 @@ function AgentDropdown({
   }, [agents, userId]);
 
   if (!activeAgent) {
-    return <span className="text-xs text-muted-foreground">No agents</span>;
+    return <span className="text-xs text-muted-foreground">{i18n.t("chat:noAgents")}</span>;
   }
 
   return (
@@ -456,7 +458,7 @@ function AgentDropdown({
       <DropdownMenuContent align="start" side="top" className="max-h-80 w-auto max-w-64">
         {mine.length > 0 && (
           <DropdownMenuGroup>
-            <DropdownMenuLabel>My agents</DropdownMenuLabel>
+            <DropdownMenuLabel>{i18n.t("chat:myAgents")}</DropdownMenuLabel>
             {mine.map((agent) => (
               <AgentMenuItem
                 key={agent.id}
@@ -470,7 +472,7 @@ function AgentDropdown({
         {mine.length > 0 && others.length > 0 && <DropdownMenuSeparator />}
         {others.length > 0 && (
           <DropdownMenuGroup>
-            <DropdownMenuLabel>Others</DropdownMenuLabel>
+            <DropdownMenuLabel>{i18n.t("chat:others")}</DropdownMenuLabel>
             {others.map((agent) => (
               <AgentMenuItem
                 key={agent.id}
@@ -527,7 +529,7 @@ function SessionDropdown({
 }) {
   const agentById = useMemo(() => new Map(agents.map((a) => [a.id, a])), [agents]);
   const activeSession = sessions.find((s) => s.id === activeSessionId);
-  const title = activeSession?.title?.trim() || "New chat";
+  const title = activeSession?.title?.trim() || i18n.t("chat:newChat");
   const triggerAgent = activeSession ? agentById.get(activeSession.agent_id) ?? null : null;
 
   return (
@@ -540,7 +542,7 @@ function SessionDropdown({
       <DropdownMenuContent align="start" className="max-h-80 w-auto min-w-56 max-w-80">
         {sessions.length === 0 ? (
           <div className="px-2 py-1.5 text-xs text-muted-foreground">
-            No previous chats
+            {i18n.t("chat:noPreviousChats")}
           </div>
         ) : (
           sessions.map((session) => {
@@ -558,7 +560,7 @@ function SessionDropdown({
                   <span className="size-6 shrink-0" />
                 )}
                 <span className="truncate flex-1 text-sm">
-                  {session.title?.trim() || "New chat"}
+                  {session.title?.trim() || i18n.t("chat:newChat")}
                 </span>
                 {session.has_unread && (
                   <span className="size-1.5 shrink-0 rounded-full bg-brand" />
@@ -589,10 +591,10 @@ function AgentAvatarSmall({ agent }: { agent: Agent }) {
  * immediately — ChatGPT-style — because the point is showing users what
  * this chat is for: operating on the workspace, not open-ended Q&A.
  */
-const STARTER_PROMPTS: { icon: string; text: string }[] = [
-  { icon: "📋", text: "List my open tasks by priority" },
-  { icon: "📝", text: "Summarize what I did today" },
-  { icon: "💡", text: "Plan what to work on next" },
+const STARTER_PROMPTS: { icon: string; textKey: string }[] = [
+  { icon: "📋", textKey: "chat:suggestions.listTasks" },
+  { icon: "📝", textKey: "chat:suggestions.summarize" },
+  { icon: "💡", textKey: "chat:suggestions.planNext" },
 ];
 
 function EmptyState({
@@ -602,24 +604,25 @@ function EmptyState({
   agentName?: string;
   onPickPrompt: (text: string) => void;
 }) {
+  const { t } = useTranslation('chat');
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-5 px-6 py-8">
       <div className="text-center space-y-1">
         <h3 className="text-base font-semibold">
-          {agentName ? `Hi, I'm ${agentName}` : "Welcome to Multica"}
+          {agentName ? t("hiIm", { name: agentName }) : t("welcomeMessage")}
         </h3>
-        <p className="text-sm text-muted-foreground">Try asking</p>
+        <p className="text-sm text-muted-foreground">{t("tryAsking")}</p>
       </div>
       <div className="w-full max-w-xs space-y-2">
         {STARTER_PROMPTS.map((prompt) => (
           <button
-            key={prompt.text}
+            key={prompt.textKey}
             type="button"
-            onClick={() => onPickPrompt(prompt.text)}
+            onClick={() => onPickPrompt(i18n.t(prompt.textKey))}
             className="w-full rounded-lg border border-border bg-card px-3 py-2 text-left text-sm text-foreground transition-colors hover:bg-accent hover:border-brand/40"
           >
             <span className="mr-2">{prompt.icon}</span>
-            {prompt.text}
+            {i18n.t(prompt.textKey)}
           </button>
         ))}
       </div>

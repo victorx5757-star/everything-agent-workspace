@@ -4,6 +4,7 @@ import { MessageCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { cn } from "@multica/ui/lib/utils";
 import { useChatStore } from "@multica/core/chat";
+import { useTranslation } from "@multica/core/i18n";
 import { chatSessionsOptions, pendingChatTasksOptions } from "@multica/core/chat/queries";
 import { useWorkspaceId } from "@multica/core/hooks";
 import { createLogger } from "@multica/core/logger";
@@ -16,6 +17,7 @@ import {
 const logger = createLogger("chat.ui");
 
 export function ChatFab() {
+  const { t } = useTranslation('chat');
   const wsId = useWorkspaceId();
   const isOpen = useChatStore((s) => s.isOpen);
   const toggle = useChatStore((s) => s.toggle);
@@ -34,10 +36,10 @@ export function ChatFab() {
 
   // Tooltip text communicates the state that isn't carried by the icon/badge.
   const tooltip = isRunning
-    ? "Multica is working..."
+    ? t("multicaWorking")
     : unreadSessionCount > 0
-      ? `${unreadSessionCount} unread ${unreadSessionCount === 1 ? "chat" : "chats"}`
-      : "Ask Multica";
+      ? t("unreadChat", { count: unreadSessionCount })
+      : t("askMultica");
 
   return (
     <Tooltip>

@@ -32,6 +32,7 @@ import {
 } from "@multica/ui/components/ui/popover";
 import { Input } from "@multica/ui/components/ui/input";
 import { Button } from "@multica/ui/components/ui/button";
+import { useTranslation } from "@multica/core/i18n";
 import {
   Bold,
   Italic,
@@ -244,9 +245,10 @@ function LinkEditBar({
 
 function HeadingDropdown({ editor, onOpenChange, activeLevel }: { editor: Editor; onOpenChange: (open: boolean) => void; activeLevel: number | undefined }) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation("issues");
   const label = activeLevel ? `H${activeLevel}` : "Text";
   const items = [
-    { label: "Normal Text", icon: Type, active: !activeLevel, action: () => editor.chain().focus().setParagraph().run() },
+    { label: t("editor.normalText"), icon: Type, active: !activeLevel, action: () => editor.chain().focus().setParagraph().run() },
     { label: "Heading 1", icon: Heading1, active: activeLevel === 1, action: () => editor.chain().focus().toggleHeading({ level: 1 }).run() },
     { label: "Heading 2", icon: Heading2, active: activeLevel === 2, action: () => editor.chain().focus().toggleHeading({ level: 2 }).run() },
     { label: "Heading 3", icon: Heading3, active: activeLevel === 3, action: () => editor.chain().focus().toggleHeading({ level: 3 }).run() },

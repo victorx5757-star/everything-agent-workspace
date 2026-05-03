@@ -13,7 +13,7 @@ import { useFileUpload } from "@multica/core/hooks/use-file-upload";
 import { useTranslation } from "@multica/core/i18n";
 
 export function AccountTab() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('settings');
   const user = useAuthStore((s) => s.user);
   const setUser = useAuthStore((s) => s.setUser);
 
@@ -42,9 +42,9 @@ export function AccountTab() {
       if (!result) return;
       const updated = await api.updateMe({ avatar_url: result.link });
       setUser(updated);
-      toast.success(t.settings.account.avatarUpdated);
+      toast.success(t('account.avatarUpdated'));
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : t.settings.account.failedToUploadAvatar);
+      toast.error(err instanceof Error ? err.message : t('account.failedToUploadAvatar'));
     }
   };
 
@@ -53,9 +53,9 @@ export function AccountTab() {
     try {
       const updated = await api.updateMe({ name: profileName });
       setUser(updated);
-      toast.success(t.settings.account.profileUpdated);
+      toast.success(t('account.profileUpdated'));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : t.settings.account.failedToUpdateProfile);
+      toast.error(e instanceof Error ? e.message : t('account.failedToUpdateProfile'));
     } finally {
       setProfileSaving(false);
     }
@@ -64,7 +64,7 @@ export function AccountTab() {
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">{t.settings.account.title}</h2>
+        <h2 className="text-sm font-semibold">{t('account.title')}</h2>
 
         <Card>
           <CardContent className="space-y-4">
@@ -103,12 +103,12 @@ export function AccountTab() {
                 onChange={handleAvatarUpload}
               />
               <div className="text-xs text-muted-foreground">
-                {t.settings.account.clickToUpload}
+                {t('account.clickToUpload')}
               </div>
             </div>
 
             <div>
-              <Label className="text-xs text-muted-foreground">{t.settings.account.name}</Label>
+              <Label className="text-xs text-muted-foreground">{t('account.name')}</Label>
               <Input
                 type="search"
                 value={profileName}
@@ -123,7 +123,7 @@ export function AccountTab() {
                 disabled={profileSaving || !profileName.trim()}
               >
                 <Save className="h-3 w-3" />
-                {profileSaving ? t.settings.account.updating : t.settings.account.updateProfile}
+                {profileSaving ? t('account.updating') : t('account.updateProfile')}
               </Button>
             </div>
           </CardContent>

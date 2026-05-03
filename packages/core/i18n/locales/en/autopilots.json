@@ -1,0 +1,123 @@
+{
+  "title": "Autopilot",
+  "newAutopilot": "New autopilot",
+  "editAutopilot": "Edit Autopilot",
+  "addTrigger": "Add Trigger",
+  "fields": {
+    "name": "Name",
+    "prompt": "Prompt",
+    "agent": "Agent",
+    "schedule": "Schedule",
+    "priority": "Priority",
+    "executionMode": "Execution Mode",
+    "selectAgent": "Select agent...",
+    "promptPlaceholder": "Step-by-step instructions for the agent...",
+    "time": "Time",
+    "timezone": "Timezone",
+    "minute": "Minute",
+    "day": "Day",
+    "cronExpression": "Cron Expression",
+    "cronHint": "Standard 5-field cron",
+    "label": "Label (optional)",
+    "labelPlaceholder": "e.g. Weekday morning"
+  },
+  "schedule": {
+    "daily": "Daily",
+    "weekdays": "Weekdays",
+    "weekly": "Weekly",
+    "hourly": "Hourly",
+    "custom": "Custom"
+  },
+  "status": {
+    "active": "Active",
+    "paused": "Paused",
+    "archived": "Archived"
+  },
+  "mode": {
+    "createIssue": "Create Issue",
+    "runOnly": "Run Only"
+  },
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "none": "None"
+  },
+  "runStatus": {
+    "created": "Issue Created",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "empty": {
+    "noAutopilots": "No autopilots yet",
+    "description": "Schedule recurring tasks for your AI agents",
+    "pickTemplate": "Pick a template or start from scratch",
+    "noTriggers": "No triggers configured",
+    "addSchedule": "Add a schedule to run automatically",
+    "noRuns": "No runs yet",
+    "clickRunNow": "Click 'Run now' to trigger manually"
+  },
+  "templates": {
+    "dailyNews": "Daily news digest",
+    "prReview": "PR review reminder",
+    "bugTriage": "Bug triage",
+    "weeklyProgress": "Weekly progress report",
+    "dependencyAudit": "Dependency audit",
+    "docCheck": "Documentation check",
+    "dailyNewsDesc": "Search and summarize today's news for the team",
+    "prReviewDesc": "Flag stale pull requests that need review",
+    "bugTriageDesc": "Assess and prioritize new bug reports",
+    "weeklyProgressDesc": "Compile a weekly summary of team progress",
+    "dependencyAuditDesc": "Scan for security vulnerabilities and outdated packages",
+    "docCheckDesc": "Review recent changes for documentation gaps",
+    "fromScratch": "Start from scratch"
+  },
+  "messages": {
+    "created": "Autopilot created",
+    "failedToCreate": "Failed to create autopilot",
+    "updated": "Autopilot updated",
+    "failedToUpdate": "Failed to update autopilot",
+    "deleted": "Autopilot deleted",
+    "failedToDelete": "Failed to delete autopilot",
+    "triggerDeleted": "Trigger deleted",
+    "triggerAdded": "Trigger added",
+    "failedToAddTrigger": "Failed to add trigger",
+    "triggered": "Autopilot triggered",
+    "failedToTrigger": "Failed to trigger autopilot"
+  },
+  "tabs": {
+    "properties": "Properties",
+    "triggers": "Triggers",
+    "runHistory": "Run History",
+    "dangerZone": "Danger Zone"
+  },
+  "actions": {
+    "runNow": "Run now",
+    "deleteAutopilot": "Delete autopilot",
+    "edit": "Edit",
+    "pause": "Pause",
+    "activate": "Activate",
+    "addTrigger": "Add trigger",
+    "adding": "Adding...",
+    "running": "Running..."
+  },
+  "detail": {
+    "notFound": "Autopilot not found"
+  },
+  "labels": {
+    "lastRun": "Last run",
+    "mode": "Mode",
+    "issueLinked": "Issue linked",
+    "disabled": "Disabled",
+    "unknownAgent": "Unknown Agent"
+  },
+  "descriptions": {
+    "triggerDescription": "Runs every hour at :{{min}}",
+    "dailyDescription": "Runs daily at {{time}} {{offset}}",
+    "weekdaysDescription": "Runs weekdays at {{time}} {{offset}}",
+    "weeklyDescription": "Runs every {{day}} at {{time}} {{offset}}",
+    "customDescription": "Custom schedule: {{cron}}"
+  }
+}

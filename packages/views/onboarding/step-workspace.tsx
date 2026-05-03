@@ -7,6 +7,7 @@ import { Label } from "@multica/ui/components/ui/label";
 import { Button } from "@multica/ui/components/ui/button";
 import { Card, CardContent } from "@multica/ui/components/ui/card";
 import { useCreateWorkspace } from "@multica/core/workspace/mutations";
+import { useTranslation } from "@multica/core/i18n";
 import {
   WORKSPACE_SLUG_CONFLICT_ERROR,
   WORKSPACE_SLUG_FORMAT_ERROR,
@@ -16,6 +17,7 @@ import {
 } from "../workspace/slug";
 
 export function StepWorkspace({ onNext }: { onNext: () => void }) {
+  const { t } = useTranslation("onboarding");
   const createWorkspace = useCreateWorkspace();
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -55,10 +57,10 @@ export function StepWorkspace({ onNext }: { onNext: () => void }) {
         onError: (error) => {
           if (isWorkspaceSlugConflict(error)) {
             setSlugServerError(WORKSPACE_SLUG_CONFLICT_ERROR);
-            toast.error("Choose a different workspace URL");
+            toast.error(t("messages.chooseDifferentUrl"));
             return;
           }
-          toast.error("Failed to create workspace");
+          toast.error(t("messages.failedToCreateWorkspace"));
         },
       },
     );
@@ -68,17 +70,17 @@ export function StepWorkspace({ onNext }: { onNext: () => void }) {
     <div className="flex w-full max-w-md flex-col items-center gap-8">
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight">
-          Welcome to Multica
+          {t("welcome")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Create your workspace to start building with AI agents.
+          {t("createWorkspaceDescription")}
         </p>
       </div>
 
       <Card className="w-full">
         <CardContent className="space-y-4 pt-6">
           <div className="space-y-1.5">
-            <Label>Workspace Name</Label>
+            <Label>{t("fields.workspaceNameLabel")}</Label>
             <Input
               autoFocus
               type="text"
@@ -89,7 +91,7 @@ export function StepWorkspace({ onNext }: { onNext: () => void }) {
             />
           </div>
           <div className="space-y-1.5">
-            <Label>Workspace URL</Label>
+            <Label>{t("fields.workspaceUrl")}</Label>
             <div className="flex items-center gap-0 rounded-md border bg-background focus-within:ring-2 focus-within:ring-ring">
               <span className="pl-3 text-sm text-muted-foreground select-none">
                 multica.ai/
@@ -116,7 +118,7 @@ export function StepWorkspace({ onNext }: { onNext: () => void }) {
         onClick={handleCreate}
         disabled={createWorkspace.isPending || !canSubmit}
       >
-        {createWorkspace.isPending ? "Creating..." : "Create Workspace"}
+        {createWorkspace.isPending ? t("creating") : t("createWorkspaceButton")}
       </Button>
     </div>
   );

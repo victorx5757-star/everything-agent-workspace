@@ -12,6 +12,7 @@ import { STATUS_CONFIG } from "@multica/core/issues/config";
 import { useModalStore } from "@multica/core/modals";
 import { useViewStore } from "@multica/core/issues/stores/view-store-context";
 import { useIssueSelectionStore } from "@multica/core/issues/stores/selection-store";
+import { useTranslation } from "@multica/core/i18n";
 import { sortIssues } from "../utils/sort";
 import { StatusIcon } from "./status-icon";
 import { ListRow, type ChildProgress } from "./list-row";
@@ -37,6 +38,7 @@ export function ListView({
   myIssuesFilter?: MyIssuesFilter;
 }) {
   const sortBy = useViewStore((s) => s.sortBy);
+  const { t } = useTranslation('issues');
   const sortDirection = useViewStore((s) => s.sortDirection);
   const listCollapsedStatuses = useViewStore(
     (s) => s.listCollapsedStatuses
@@ -141,7 +143,7 @@ export function ListView({
                     >
                       <Plus className="size-3.5" />
                     </TooltipTrigger>
-                    <TooltipContent>Add issue</TooltipContent>
+                    <TooltipContent>{t('addIssue')}</TooltipContent>
                   </Tooltip>
                 </div>
               </Accordion.Header>
@@ -157,7 +159,7 @@ export function ListView({
                   </>
                 ) : (
                   <p className="py-6 text-center text-xs text-muted-foreground">
-                    No issues
+                    {t('noIssues')}
                   </p>
                 )}
               </Accordion.Panel>

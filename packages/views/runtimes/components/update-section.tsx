@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "@multica/ui/components/ui/button";
 import { api } from "@multica/core/api";
+import { useTranslation } from "@multica/core/i18n";
 import type { RuntimeUpdateStatus } from "@multica/core/types";
 
 const GITHUB_RELEASES_URL =
@@ -53,25 +54,25 @@ function isNewer(latest: string, current: string): boolean {
 
 const statusConfig: Record<
   RuntimeUpdateStatus,
-  { label: string; icon: typeof Loader2; color: string }
+  { labelKey: string; icon: typeof Loader2; color: string }
 > = {
   pending: {
-    label: "Waiting for daemon...",
+    labelKey: "update.pending",
     icon: Loader2,
     color: "text-muted-foreground",
   },
   running: {
-    label: "Updating...",
+    labelKey: "update.running",
     icon: Loader2,
     color: "text-info",
   },
   completed: {
-    label: "Update complete. Daemon is restarting...",
+    labelKey: "update.completed",
     icon: CheckCircle2,
     color: "text-success",
   },
-  failed: { label: "Update failed", icon: XCircle, color: "text-destructive" },
-  timeout: { label: "Timeout", icon: XCircle, color: "text-warning" },
+  failed: { labelKey: "updateFailed", icon: XCircle, color: "text-destructive" },
+  timeout: { labelKey: "update.timeout", icon: XCircle, color: "text-warning" },
 };
 
 interface UpdateSectionProps {
@@ -93,6 +94,7 @@ export function UpdateSection({
   isOnline,
   launchedBy,
 }: UpdateSectionProps) {
+  const { t } = useTranslation('runtimes');
   const isManaged = launchedBy === "desktop";
   const [latestVersion, setLatestVersion] = useState<string | null>(null);
   const [status, setStatus] = useState<RuntimeUpdateStatus | null>(null);
@@ -169,24 +171,24 @@ export function UpdateSection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 flex-wrap">
-        <span className="text-xs text-muted-foreground">CLI Version:</span>
+        <span className="text-xs text-muted-foreground">{t('update.cliVersionLabel')}</span>
         <span className="text-xs font-mono">
-          {currentVersion ?? "unknown"}
+          {currentVersion ?? t('update.unknown')}
         </span>
 
         {isManaged ? (
           <span
             className="inline-flex items-center gap-1 text-xs text-muted-foreground"
-            title="The CLI binary is managed by Multica Desktop — update Desktop to upgrade the CLI."
+            title={t('update.managedTooltip')}
           >
-            Managed by Desktop
+            {t('update.managedByDesktop')}
           </span>
         ) : (
           <>
             {!hasUpdate && currentVersion && latestVersion && !status && (
               <span className="inline-flex items-center gap-1 text-xs text-success">
                 <Check className="h-3 w-3" />
-                Latest
+                {t('update.latest')}
               </span>
             )}
 
@@ -196,7 +198,7 @@ export function UpdateSection({
                 <span className="text-xs font-mono text-info">
                   {latestVersion}
                 </span>
-                <span className="text-xs text-muted-foreground">available</span>
+                <span className="text-xs text-muted-foreground">{t('update.available')}</span>
               </>
             )}
 
@@ -208,7 +210,7 @@ export function UpdateSection({
                 disabled={updating}
               >
                 <ArrowUpCircle className="h-3 w-3" />
-                Update
+                {t('update.update')}
               </Button>
             )}
           </>
@@ -219,7 +221,7 @@ export function UpdateSection({
             className={`inline-flex items-center gap-1 text-xs ${config.color}`}
           >
             <Icon className={`h-3 w-3 ${isActive ? "animate-spin" : ""}`} />
-            {config.label}
+            {t(config.labelKey)}
           </span>
         )}
       </div>

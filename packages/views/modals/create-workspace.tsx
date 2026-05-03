@@ -16,6 +16,7 @@ import {
 } from "@multica/ui/components/ui/dialog";
 import { Card, CardContent } from "@multica/ui/components/ui/card";
 import { useCreateWorkspace } from "@multica/core/workspace/mutations";
+import { useTranslation } from "@multica/core/i18n";
 import { paths } from "@multica/core/paths";
 import {
   WORKSPACE_SLUG_CONFLICT_ERROR,
@@ -26,6 +27,7 @@ import {
 } from "../workspace/slug";
 
 export function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
+  const { t } = useTranslation("modals");
   // This modal is full-screen, so it covers the app titlebar. On macOS desktop
   // we hide the traffic lights for its lifetime so the Back button in the top-
   // left corner isn't stolen by the native controls' hit-test. No-op elsewhere.
@@ -84,10 +86,10 @@ export function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
         onError: (error) => {
           if (isWorkspaceSlugConflict(error)) {
             setSlugServerError(WORKSPACE_SLUG_CONFLICT_ERROR);
-            toast.error("Choose a different workspace URL");
+            toast.error(t("createWorkspace.chooseUrl"));
             return;
           }
-          toast.error("Failed to create workspace");
+          toast.error(t("createWorkspace.failedToCreate"));
         },
       },
     );
@@ -122,34 +124,33 @@ export function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
           onClick={onClose}
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          {t("createWorkspace.back")}
         </Button>
 
         <div className="flex w-full max-w-md flex-col items-center gap-6">
           <div className="text-center">
             <DialogTitle className="text-2xl font-semibold">
-              Create a new workspace
+              {t("createWorkspace.title")}
             </DialogTitle>
             <DialogDescription className="mt-2">
-              Workspaces are shared environments where teams can work on
-              projects and issues.
+              {t("createWorkspace.description")}
             </DialogDescription>
           </div>
 
           <Card className="w-full">
             <CardContent className="space-y-4 pt-6">
               <div className="space-y-1.5">
-                <Label>Workspace Name</Label>
+                <Label>{t("createWorkspace.slugLabel")}</Label>
                 <Input
                   autoFocus
                   type="text"
                   value={name}
                   onChange={(e) => handleNameChange(e.target.value)}
-                  placeholder="My Workspace"
+                  placeholder={t("createWorkspace.namePlaceholder")}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Workspace URL</Label>
+                <Label>{t("createWorkspace.urlLabel")}</Label>
                 <div className="flex items-center gap-0 rounded-md border bg-background focus-within:ring-2 focus-within:ring-ring">
                   <span className="pl-3 text-sm text-muted-foreground select-none">
                     multica.ai/
@@ -158,7 +159,7 @@ export function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
                     type="text"
                     value={slug}
                     onChange={(e) => handleSlugChange(e.target.value)}
-                    placeholder="my-workspace"
+                    placeholder={t("createWorkspace.slugPlaceholder")}
                     className="border-0 shadow-none focus-visible:ring-0"
                     onKeyDown={(e) => e.key === "Enter" && handleCreate()}
                   />
@@ -176,7 +177,7 @@ export function CreateWorkspaceModal({ onClose }: { onClose: () => void }) {
             onClick={handleCreate}
             disabled={createWorkspace.isPending || !canSubmit}
           >
-            {createWorkspace.isPending ? "Creating..." : "Create workspace"}
+            {createWorkspace.isPending ? t("createWorkspace.creating") : t("createWorkspace.create")}
           </Button>
         </div>
       </DialogContent>

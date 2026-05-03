@@ -28,6 +28,10 @@ catalog:
   # Icons
   lucide-react: "^1.0.1"
 
+  # i18n
+  i18next: "^25.2.1"
+  react-i18next: "^15.5.3"
+
   # Testing
   vitest: "^4.1.0"
   jsdom: "^29.0.1"

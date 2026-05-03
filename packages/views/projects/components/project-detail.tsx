@@ -18,6 +18,7 @@ import { memberListOptions, agentListOptions } from "@multica/core/workspace/que
 import { useWorkspaceId } from "@multica/core/hooks";
 import { useCurrentWorkspace, useWorkspacePaths } from "@multica/core/paths";
 import { useActorName } from "@multica/core/workspace/hooks";
+import { useTranslation } from "@multica/core/i18n";
 import { PROJECT_STATUS_ORDER, PROJECT_STATUS_CONFIG, PROJECT_PRIORITY_ORDER, PROJECT_PRIORITY_CONFIG } from "@multica/core/projects/config";
 import { BOARD_STATUSES } from "@multica/core/issues/config";
 import { createIssueViewStore } from "@multica/core/issues/stores/view-store";
@@ -182,6 +183,7 @@ function ProjectIssuesContent({ projectIssues }: { projectIssues: Issue[] }) {
 // ---------------------------------------------------------------------------
 
 export function ProjectDetail({ projectId }: { projectId: string }) {
+  const { t } = useTranslation("projects");
   const wsId = useWorkspaceId();
   const wsPaths = useWorkspacePaths();
   const router = useNavigation();
@@ -248,7 +250,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
     if (!project) return;
     deleteProject.mutate(project.id, {
       onSuccess: () => {
-        toast.success("Project deleted");
+        toast.success(t("messages.deleted"));
         router.push(wsPaths.projects());
       },
     });
@@ -283,7 +285,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
               <button
                 type="button"
                 className="text-2xl cursor-pointer rounded-lg p-1 -ml-1 hover:bg-accent/60 transition-colors"
-                title="Change icon"
+                title={t("actions.changeIcon")}
               >
                 {project.icon || "📁"}
               </button>
@@ -529,7 +531,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
                 <DropdownMenuContent align="end" className="w-auto">
                   <DropdownMenuItem onClick={() => {
                     navigator.clipboard.writeText(window.location.href);
-                    toast.success("Link copied");
+                    toast.success(t("messages.linkCopied"));
                   }}>
                     <Link2 className="h-3.5 w-3.5" />
                     Copy link

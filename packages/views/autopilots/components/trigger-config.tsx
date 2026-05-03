@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { cn } from "@multica/ui/lib/utils";
+import { useTranslation } from "@multica/core/i18n";
 import {
   Select,
   SelectTrigger,
@@ -24,12 +25,12 @@ export interface TriggerConfig {
 // Constants
 // ---------------------------------------------------------------------------
 
-const FREQUENCIES: { value: TriggerFrequency; label: string }[] = [
-  { value: "hourly", label: "Hourly" },
-  { value: "daily", label: "Daily" },
-  { value: "weekdays", label: "Weekdays" },
-  { value: "weekly", label: "Weekly" },
-  { value: "custom", label: "Custom" },
+const FREQUENCIES: { value: TriggerFrequency; labelKey: string }[] = [
+  { value: "hourly", labelKey: "schedule.hourly" },
+  { value: "daily", labelKey: "schedule.daily" },
+  { value: "weekdays", labelKey: "schedule.weekdays" },
+  { value: "weekly", labelKey: "schedule.weekly" },
+  { value: "custom", labelKey: "schedule.custom" },
 ];
 
 const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -155,6 +156,7 @@ export function TriggerConfigSection({
   config: TriggerConfig;
   onChange: (config: TriggerConfig) => void;
 }) {
+  const { t } = useTranslation("autopilots");
   const timezones = useMemo(() => {
     const local = getLocalTimezone();
     const set = new Set(COMMON_TIMEZONES);
@@ -177,7 +179,7 @@ export function TriggerConfigSection({
             )}
             onClick={() => onChange({ ...config, frequency: f.value })}
           >
-            {f.label}
+            {t(f.labelKey)}
           </button>
         ))}
       </div>
@@ -185,7 +187,7 @@ export function TriggerConfigSection({
       {config.frequency === "custom" ? (
         /* Custom cron input */
         <div>
-          <label className="text-xs text-muted-foreground">Cron Expression</label>
+          <label className="text-xs text-muted-foreground">{t("fields.cronExpression")}</label>
           <input
             type="text"
             value={config.cronExpression}
@@ -194,7 +196,7 @@ export function TriggerConfigSection({
             className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm font-mono outline-none focus:ring-1 focus:ring-ring"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Standard 5-field cron (min hour dom month dow)
+            {t("fields.cronHint")}
           </p>
         </div>
       ) : (
@@ -203,7 +205,7 @@ export function TriggerConfigSection({
           <div className="flex gap-3">
             {config.frequency === "hourly" ? (
               <div className="w-24">
-                <label className="text-xs text-muted-foreground">Minute</label>
+                <label className="text-xs text-muted-foreground">{t("fields.minute")}</label>
                 <input
                   type="number"
                   min={0}
@@ -219,7 +221,7 @@ export function TriggerConfigSection({
             ) : (
               <>
                 <div className="w-28">
-                  <label className="text-xs text-muted-foreground">Time</label>
+                  <label className="text-xs text-muted-foreground">{t("fields.time")}</label>
                   <input
                     type="time"
                     value={config.time}
@@ -228,7 +230,7 @@ export function TriggerConfigSection({
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <label className="text-xs text-muted-foreground">Timezone</label>
+                  <label className="text-xs text-muted-foreground">{t("fields.timezone")}</label>
                   <Select
                     value={config.timezone}
                     onValueChange={(v) => v && onChange({ ...config, timezone: v })}
@@ -254,7 +256,7 @@ export function TriggerConfigSection({
           {/* Day-of-week selector for weekly */}
           {config.frequency === "weekly" && (
             <div>
-              <label className="text-xs text-muted-foreground">Day</label>
+              <label className="text-xs text-muted-foreground">{t("fields.day")}</label>
               <div className="flex gap-1 mt-1">
                 {DAYS_OF_WEEK.map((day, i) => (
                   <button

@@ -1,0 +1,115 @@
+{
+  "title": "代理",
+  "updated": "代理已更新",
+  "failedToUpdate": "更新代理失败",
+  "archived": "代理已归档",
+  "failedToArchive": "归档代理失败",
+  "restored": "代理已恢复",
+  "failedToRestore": "恢复代理失败",
+  "createAgent": "创建代理",
+  "createAgentDescription": "为工作区创建新的 AI 代理。",
+  "showActive": "显示活跃代理",
+  "showArchived": "显示已归档代理",
+  "noArchived": "无已归档代理",
+  "noActive": "无活跃代理",
+  "noAgents": "暂无代理",
+  "selectAgent": "选择一个代理查看详情",
+  "archivedNotice": "此代理已归档，无法被分配或提及。",
+  "archiveConfirm": "归档代理？",
+  "archiveWarning": "「{{name}}」将被归档。它将无法被分配或提及，但所有历史记录会保留。你可以稍后恢复它。",
+  "failedToCreate": "创建代理失败",
+  "tabs": {
+    "instructions": "指令",
+    "skills": "技能",
+    "tasks": "任务",
+    "environment": "环境",
+    "customArgs": "自定义参数",
+    "agentSettings": "设置"
+  },
+  "fields": {
+    "name": "名称",
+    "namePlaceholder": "例如 深度研究代理",
+    "nameRequired": "名称为必填项",
+    "description": "描述",
+    "descriptionPlaceholder": "这个代理做什么？",
+    "visibility": "可见性",
+    "runtime": "运行时",
+    "maxConcurrentTasks": "最大并发任务数",
+    "avatar": "头像",
+    "clickToUpload": "点击上传头像",
+    "avatarUpdated": "头像已更新",
+    "failedToUploadAvatar": "上传头像失败"
+  },
+  "visibility": {
+    "workspace": "工作区",
+    "private": "私有",
+    "allMembers": "所有成员可分配",
+    "onlyYou": "仅你可分配"
+  },
+  "runtime": {
+    "mine": "我的",
+    "all": "全部",
+    "cloud": "云端",
+    "loading": "加载运行时...",
+    "none": "无可用运行时",
+    "register": "请先注册运行时再创建代理",
+    "selectRuntime": "选择运行时"
+  },
+  "labels": {
+    "archived": "已归档",
+    "cloud": "云端",
+    "local": "本地"
+  },
+  "settings": {
+    "saved": "设置已保存",
+    "failedToSave": "保存设置失败"
+  },
+  "instructions": {
+    "title": "代理指令",
+    "description": "定义代理的身份和工作方式。这些指令会注入到代理的上下文中，用于每个任务。",
+    "noInstructions": "未设置指令",
+    "characterCount": "{{count}} 个字符",
+    "placeholder": "定义代理的角色、专长和工作方式。\n\n示例：\n你是一名专注于 React 和 TypeScript 的前端工程师。\n\n## 工作方式\n- 编写小型、聚焦的 PR — 每个逻辑变更一个提交\n- 优先使用组合而非继承\n- 始终为新组件添加单元测试\n\n## 约束\n- 未经明确批准不得修改 shared/ 类型\n- 遵循 features/ 中现有的组件模式"
+  },
+  "skills": {
+    "description": "分配给此代理的工作区技能。",
+    "localRuntimeNote": "本地运行时技能（来自 CLI 的技能目录）会自动可用，无需在此添加。",
+    "noSkills": "未分配技能",
+    "emptyDescription": "添加工作区技能以共享团队知识。本地技能已自动使用。",
+    "addSkill": "添加技能",
+    "selectSkill": "选择要分配给此代理的技能。",
+    "allAssigned": "所有工作区技能已分配。",
+    "failedToAdd": "添加技能失败",
+    "failedToRemove": "移除技能失败"
+  },
+  "tasks": {
+    "taskQueue": "任务队列",
+    "taskQueueDescription": "分配给此代理的问题及其执行状态。",
+    "noTasks": "队列中无任务",
+    "assignPrompt": "为此代理分配一个问题以开始。",
+    "started": "已开始",
+    "dispatched": "已调度",
+    "completed": "已完成",
+    "failed": "已失败",
+    "queued": "排队中"
+  },
+  "env": {
+    "title": "环境变量",
+    "description": "在启动时注入到代理进程中（例如 ANTHROPIC_API_KEY、ANTHROPIC_BASE_URL）",
+    "readOnlyDescription": "在启动时注入到代理进程中。值已隐藏 — 仅代理所有者或工作区管理员可查看和编辑。",
+    "noEnv": "未配置环境变量。",
+    "saved": "环境变量已保存",
+    "failedToSave": "保存环境变量失败",
+    "duplicateKeys": "存在重复的环境变量键",
+    "keyPlaceholder": "键名",
+    "valuePlaceholder": "值"
+  },
+  "customArgs": {
+    "title": "自定义参数",
+    "description": "启动时附加到代理命令的额外 CLI 参数（例如 --model claude-sonnet-4-20250514）",
+    "saved": "自定义参数已保存",
+    "failedToSave": "保存自定义参数失败",
+    "placeholder": "--model claude-sonnet-4-20250514"
+  },
+  "archiveAgent": "归档代理"
+}

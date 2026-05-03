@@ -1,0 +1,72 @@
+{
+  "daemon": {
+    "title": "本地守护进程",
+    "start": "启动",
+    "stop": "停止",
+    "restart": "重启",
+    "logs": "日志",
+    "failedToStart": "启动守护进程失败",
+    "failedToStop": "停止守护进程失败",
+    "failedToRestart": "重启守护进程失败",
+    "status": "状态",
+    "uptime": "运行时间",
+    "profile": "配置",
+    "server": "服务器",
+    "agents": "代理",
+    "device": "设备",
+    "daemonId": "守护进程 ID",
+    "workspaces": "工作区",
+    "pid": "PID",
+    "settingUp": "正在设置本地运行时…这只在第一次发生。",
+    "setupFailed": "无法下载本地运行时。请检查网络连接后重试。",
+    "scrollToBottom": "滚动到底部",
+    "waitingForLogs": "等待日志…",
+    "startForLogs": "启动守护进程以查看日志",
+    "state": {
+      "running": "运行中",
+      "stopped": "已停止",
+      "starting": "启动中…",
+      "stopping": "停止中…",
+      "settingUp": "设置中…",
+      "setupFailed": "设置失败"
+    }
+  },
+  "daemonSettings": {
+    "title": "守护进程",
+    "description": "配置本地代理守护进程与桌面应用的交互方式。",
+    "autoStart": "启动时自动运行",
+    "autoStartDescription": "应用打开且已登录时自动启动守护进程。",
+    "autoStop": "退出时自动停止",
+    "autoStopDescription": "关闭桌面应用时停止守护进程。禁用此选项可让守护进程在后台继续运行。",
+    "cliStatus": "CLI 状态",
+    "cliChecking": "检查中…",
+    "cliInstalled": "multica CLI 已安装并在 PATH 中可用。",
+    "cliNotFound": "未找到 multica CLI。安装后可启用守护进程管理。",
+    "installGuide": "安装指南"
+  },
+  "update": {
+    "newVersion": "有新版本可用",
+    "readyToDownload": "v{{version}} 已准备下载",
+    "download": "下载更新",
+    "downloading": "正在下载更新...",
+    "updateReady": "更新已就绪",
+    "restartToApply": "重启以应用更新",
+    "restartNow": "立即重启"
+  },
+  "routes": {
+    "getStarted": "开始使用",
+    "acceptInvite": "接受邀请",
+    "issues": "问题",
+    "issue": "问题",
+    "projects": "项目",
+    "project": "项目",
+    "autopilot": "自动任务",
+    "myIssues": "我的问题",
+    "runtimes": "运行时",
+    "skills": "技能",
+    "agents": "代理",
+    "inbox": "收件箱",
+    "daemon": "守护进程",
+    "settings": "设置"
+  }
+}

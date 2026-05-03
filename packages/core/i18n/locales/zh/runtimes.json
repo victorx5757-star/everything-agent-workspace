@@ -1,0 +1,87 @@
+{
+  "title": "运行时",
+  "noRuntimesRegistered": "无已注册运行时",
+  "noRuntimesOwned": "没有属于你的运行时",
+  "noRuntimesForOwner": "该所有者没有运行时",
+  "updateAvailable": "有可用更新",
+  "lastSeen": "最后在线",
+  "justNow": "刚刚",
+  "runtimeDeleted": "运行时已删除",
+  "testingConnection": "测试中...",
+  "testConnection": "测试连接",
+  "updateFailed": "更新失败",
+  "cacheRead": "缓存读取",
+  "cacheWrite": "缓存写入",
+  "noActivity": "无活动",
+  "mine": "我的",
+  "all": "全部",
+  "owner": "所有者",
+  "allOwners": "所有所有者",
+  "online": "在线",
+  "registerHint": "来注册本地运行时。",
+  "infoFields": {
+    "runtimeMode": "运行模式",
+    "provider": "提供商",
+    "status": "状态",
+    "owner": "所有者",
+    "device": "设备",
+    "daemonId": "守护进程 ID",
+    "cliVersion": "CLI 版本",
+    "connectionTest": "连接测试",
+    "tokenUsage": "Token 用量",
+    "metadata": "元数据",
+    "created": "创建时间",
+    "updated": "更新时间"
+  },
+  "sections": {
+    "cliVersion": "CLI 版本",
+    "connectionTest": "连接测试",
+    "tokenUsage": "Token 用量",
+    "metadata": "元数据"
+  },
+  "update": {
+    "managedByDesktop": "由桌面应用管理",
+    "managedTooltip": "CLI 二进制文件由 Multica 桌面应用管理 — 更新桌面应用以升级 CLI。",
+    "latest": "最新",
+    "available": "可用",
+    "update": "更新",
+    "cliVersionLabel": "CLI 版本：",
+    "unknown": "未知",
+    "pending": "等待更新",
+    "running": "更新中...",
+    "completed": "更新完成",
+    "timeout": "更新超时"
+  },
+  "statusConfig": {
+    "pending": "等待守护进程...",
+    "running": "运行测试...",
+    "completed": "已连接",
+    "failed": "失败",
+    "timeout": "超时"
+  },
+  "delete": {
+    "title": "删除运行时",
+    "description": "确定要删除",
+    "cannotUndo": "此操作无法撤销。",
+    "deleting": "删除中...",
+    "confirm": "删除"
+  },
+  "usage": {
+    "noData": "暂无使用数据",
+    "input": "输入",
+    "output": "输出",
+    "estimatedCost": "预估费用",
+    "dailyTokenUsage": "每日 Token 用量",
+    "total": "合计",
+    "date": "日期",
+    "model": "模型",
+    "cacheR": "缓存读取",
+    "cacheW": "缓存写入"
+  },
+  "heatmap": {
+    "title": "活动",
+    "less": "少",
+    "more": "多",
+    "tokens": "个 token"
+  }
+}

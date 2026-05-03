@@ -6,6 +6,7 @@ import { Button } from "@multica/ui/components/ui/button";
 import { Card } from "@multica/ui/components/ui/card";
 import { api } from "@multica/core/api";
 import type { Agent, Issue, CreateIssueRequest } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 
 interface OnboardingIssueDef {
   title: string;
@@ -15,7 +16,7 @@ interface OnboardingIssueDef {
   status: "todo" | "backlog";
 }
 
-function getOnboardingIssues(): OnboardingIssueDef[] {
+function getOnboardingIssues(t: (key: string) => string): OnboardingIssueDef[] {
   return [
     {
       title: "Say hello to the team!",
@@ -40,7 +41,7 @@ function getOnboardingIssues(): OnboardingIssueDef[] {
       status: "todo",
     },
     {
-      title: "Set up your repository connection",
+      title: t("nextSteps.repoConnection"),
       description: [
         "Connect a code repository so agents can check out code and submit pull requests.",
         "",
@@ -55,7 +56,7 @@ function getOnboardingIssues(): OnboardingIssueDef[] {
       status: "backlog",
     },
     {
-      title: "Create a skill for your agent",
+      title: t("nextSteps.createSkill"),
       description: [
         "Skills are reusable instructions that make agents better at recurring tasks — deployments, code reviews, migrations, etc.",
         "",
@@ -73,7 +74,7 @@ function getOnboardingIssues(): OnboardingIssueDef[] {
       status: "backlog",
     },
     {
-      title: "Invite a teammate",
+      title: t("nextSteps.inviteTeammate"),
       description: [
         "Multica works best with a team. Invite a colleague to your workspace so you can collaborate on issues and share agents.",
         "",
@@ -97,6 +98,8 @@ export function StepComplete({
   agent: Agent | null;
   onEnter: () => void;
 }) {
+  const { t } = useTranslation("onboarding");
+  const { t: tc } = useTranslation("common");
   const [createdIssues, setCreatedIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const didCreate = useRef(false);
@@ -106,7 +109,7 @@ export function StepComplete({
     didCreate.current = true;
 
     async function createOnboardingIssues() {
-      const defs = getOnboardingIssues();
+      const defs = getOnboardingIssues(t);
       const issues: Issue[] = [];
 
       for (const def of defs) {
@@ -143,12 +146,12 @@ export function StepComplete({
 
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight">
-          You&apos;re all set!
+          {t("allSet")}
         </h1>
         <p className="mt-2 text-muted-foreground">
           {agent
-            ? `Your workspace is ready and ${agent.name} is picking up its first task.`
-            : "Your workspace is ready. Create issues and assign them to agents to get started."}
+            ? t("workspaceReadyWithAgent", { name: agent.name })
+            : t("workspaceReady")}
         </p>
       </div>
 
@@ -156,7 +159,7 @@ export function StepComplete({
       {loading ? (
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <span>Setting up your workspace...</span>
+          <span>{t("settingUpWorkspace")}</span>
         </div>
       ) : (
         createdIssues.length > 0 && (
@@ -172,10 +175,10 @@ export function StepComplete({
                   </div>
                   <div className="truncate text-xs text-muted-foreground">
                     {issue.assignee_id && agent
-                      ? `Assigned to ${agent.name}`
+                      ? t("assignedTo", { name: agent.name })
                       : issue.status === "todo"
-                        ? "To do"
-                        : "Backlog"}
+                        ? tc("status")
+                        : t("backlog")}
                   </div>
                 </div>
                 {issue.assignee_id && agent && (
@@ -195,7 +198,7 @@ export function StepComplete({
         onClick={onEnter}
         disabled={loading}
       >
-        Go to Workspace
+        {t("goToWorkspace")}
         <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </div>

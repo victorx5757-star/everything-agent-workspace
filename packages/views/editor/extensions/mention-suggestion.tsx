@@ -20,6 +20,7 @@ import { StatusIcon } from "../../issues/components/status-icon";
 import { Badge } from "@multica/ui/components/ui/badge";
 import type { IssueStatus } from "@multica/core/types";
 import type { SuggestionOptions, SuggestionProps } from "@tiptap/suggestion";
+import { i18n } from "@multica/core/i18n";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -234,7 +235,7 @@ export function createMentionSuggestion(qc: QueryClient): Omit<
       // Show "All members" option when query is empty or matches "all"
       const allItem: MentionItem[] =
         "all members".includes(q) || "all".includes(q)
-          ? [{ id: "all", label: "All members", type: "all" as const }]
+          ? [{ id: "all", label: i18n.t("issues:editor.allMembers"), type: "all" as const }]
           : [];
 
       const memberItems: MentionItem[] = members

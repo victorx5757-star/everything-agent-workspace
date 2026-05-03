@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { RuntimeUsage } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 import { formatTokens } from "../../utils";
 
 const HEATMAP_WEEKS = 13;
@@ -19,6 +20,7 @@ function getHeatmapColor(level: number): string {
 }
 
 export function ActivityHeatmap({ usage }: { usage: RuntimeUsage[] }) {
+  const { t } = useTranslation('runtimes');
   const { cells, monthLabels } = useMemo(() => {
     const dateTokens = new Map<string, number>();
     for (const u of usage) {
@@ -96,7 +98,7 @@ export function ActivityHeatmap({ usage }: { usage: RuntimeUsage[] }) {
 
   return (
     <div className="rounded-lg border p-4">
-      <h4 className="text-xs font-medium text-muted-foreground mb-3">Activity</h4>
+      <h4 className="text-xs font-medium text-muted-foreground mb-3">{t('heatmap.title')}</h4>
       <div className="overflow-x-auto">
         <svg width={svgWidth} height={svgHeight} className="block">
           {monthLabels.map((m) => (
@@ -137,8 +139,8 @@ export function ActivityHeatmap({ usage }: { usage: RuntimeUsage[] }) {
               <title>
                 {c.date}:{" "}
                 {c.tokens > 0
-                  ? formatTokens(c.tokens) + " tokens"
-                  : "No activity"}
+                  ? formatTokens(c.tokens) + " " + t('heatmap.tokens')
+                  : t('noActivity')}
               </title>
             </rect>
           ))}
@@ -146,7 +148,7 @@ export function ActivityHeatmap({ usage }: { usage: RuntimeUsage[] }) {
       </div>
       {/* Legend */}
       <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-muted-foreground">
-        <span>Less</span>
+        <span>{t('heatmap.less')}</span>
         {[0, 1, 2, 3, 4].map((level) => (
           <div
             key={level}

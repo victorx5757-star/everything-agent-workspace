@@ -1,18 +1,10 @@
 "use client";
 
 import { MulticaIcon } from "@multica/ui/components/common/multica-icon";
+import { useTranslation } from "@multica/core/i18n";
 
-/**
- * Full-screen workspace loader. Renders IN PLACE OF the dashboard during:
- *  - initial dashboard mount (workspace resolving from URL slug + list cache)
- *  - workspace switch (refetching core workspace data with the new header)
- *
- * This is a GATE, not an overlay — sidebar/content do not render behind it.
- * The gate only opens once the current workspace id has been set on the
- * workspace-storage singleton AND all core queries for the target
- * workspace have been freshly fetched.
- */
 export function WorkspaceLoader({ name }: { name?: string | null }) {
+  const { t } = useTranslation('layout');
   return (
     <div
       className="flex h-svh w-full items-center justify-center bg-background"
@@ -23,10 +15,10 @@ export function WorkspaceLoader({ name }: { name?: string | null }) {
         <MulticaIcon className="size-8 animate-pulse" />
         {name ? (
           <p className="text-sm text-muted-foreground">
-            Loading <span className="font-medium text-foreground">{name}</span>…
+            {t('loading')} <span className="font-medium text-foreground">{name}</span>…
           </p>
         ) : (
-          <p className="text-sm text-muted-foreground">Loading workspace…</p>
+          <p className="text-sm text-muted-foreground">{t('loadingWorkspace')}</p>
         )}
       </div>
     </div>

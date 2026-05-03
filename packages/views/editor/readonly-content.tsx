@@ -31,6 +31,7 @@ import { Maximize2, Download, Link as LinkIcon, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@multica/ui/lib/utils";
 import { useWorkspacePaths, useWorkspaceSlug } from "@multica/core/paths";
+import { useTranslation } from "@multica/core/i18n";
 import { useNavigation } from "../navigation";
 import { IssueMentionCard } from "../issues/components/issue-mention-card";
 import { ImageLightbox } from "./extensions/image-view";
@@ -159,6 +160,8 @@ const components: Partial<Components> = {
 
   // Images — centered with toolbar + lightbox (matches Tiptap ImageView NodeView)
   img: function ReadonlyImage({ src, alt }) {
+    const { t } = useTranslation("issues");
+    const { t: tc } = useTranslation("common");
     const [lightbox, setLightbox] = useState(false);
     const imgSrc = typeof src === "string" ? src : "";
     const imgAlt = alt ?? "";
@@ -170,9 +173,9 @@ const components: Partial<Components> = {
     const handleCopyLink = async () => {
       try {
         await navigator.clipboard.writeText(imgSrc);
-        toast.success("Link copied");
+        toast.success(t("messages.linkCopied"));
       } catch {
-        toast.error("Failed to copy link");
+        toast.error(tc("failedToCopyLink"));
       }
     };
 

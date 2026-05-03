@@ -16,6 +16,7 @@ import { ExternalLink, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@multica/ui/components/ui/button";
 import { useWorkspaceSlug } from "@multica/core/paths";
+import { useTranslation } from "@multica/core/i18n";
 import { openLink, isMentionHref } from "./utils/link-handler";
 
 function truncateUrl(url: string, max = 48): string {
@@ -135,6 +136,8 @@ function LinkHoverCard({
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const [positioned, setPositioned] = useState(false);
   const slug = useWorkspaceSlug();
+  const { t } = useTranslation("issues");
+  const { t: tc } = useTranslation("common");
 
   // Position the card when the portal div is mounted (ref callback).
   // Using useEffect would race with portal rendering — the div might
@@ -170,9 +173,9 @@ function LinkHoverCard({
     e.preventDefault();
     try {
       await navigator.clipboard.writeText(href);
-      toast.success("Link copied");
+      toast.success(t("messages.linkCopied"));
     } catch {
-      toast.error("Failed to copy");
+      toast.error(tc("failedToCopyLink"));
     }
   };
 
@@ -207,7 +210,7 @@ function LinkHoverCard({
         variant="ghost"
         className="text-muted-foreground"
         onClick={handleCopy}
-        title="Copy link"
+        title={t("editor.copyLink")}
       >
         <Copy className="size-3.5" />
       </Button>
@@ -216,7 +219,7 @@ function LinkHoverCard({
         variant="ghost"
         className="text-muted-foreground"
         onClick={handleOpen}
-        title="Open link"
+        title={t("editor.openLink")}
       >
         <ExternalLink className="size-3.5" />
       </Button>

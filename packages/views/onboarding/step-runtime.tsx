@@ -12,6 +12,7 @@ import {
   runtimeListOptions,
   runtimeKeys,
 } from "@multica/core/runtimes/queries";
+import { useTranslation } from "@multica/core/i18n";
 
 const CLOUD_HOST = "multica.ai";
 
@@ -76,6 +77,8 @@ export function StepRuntime({
   wsId: string;
   onNext: () => void;
 }) {
+  const { t } = useTranslation("onboarding");
+  const { t: tc } = useTranslation("common");
   const qc = useQueryClient();
 
   const setupSteps = useMemo(
@@ -100,12 +103,10 @@ export function StepRuntime({
     <div className="flex w-full max-w-xl flex-col items-center gap-8">
       <div className="text-center">
         <h1 className="text-3xl font-semibold tracking-tight">
-          Connect a Runtime
+          {t("setupRuntime")}
         </h1>
         <p className="mt-2 text-muted-foreground">
-          Install the CLI and run the setup command below to connect your
-          machine. The daemon auto-detects agent CLIs (Claude Code, Codex,
-          etc.) on your PATH.
+          {t("setupRuntimeDescription")}
         </p>
       </div>
 
@@ -140,15 +141,14 @@ export function StepRuntime({
             <>
               <div className="h-2 w-2 rounded-full bg-success" />
               <span className="font-medium">
-                {runtimes.length} runtime{runtimes.length > 1 ? "s" : ""}{" "}
-                connected
+                {t("runtimesConnected", { count: runtimes.length })}
               </span>
             </>
           ) : (
             <>
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
               <span className="text-muted-foreground">
-                Waiting for connection...
+                {t("waitingForConnection")}
               </span>
             </>
           )}
@@ -197,7 +197,7 @@ export function StepRuntime({
 
       {/* Actions */}
       <Button className="w-full" size="lg" onClick={onNext}>
-        {hasRuntimes ? "Continue" : "Skip for now"}
+        {hasRuntimes ? tc("done") : t("skipForNow")}
       </Button>
     </div>
   );

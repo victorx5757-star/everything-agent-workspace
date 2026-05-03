@@ -18,6 +18,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { Eye, MoreHorizontal } from "lucide-react";
 import type { Issue, IssueStatus } from "@multica/core/types";
 import { Button } from "@multica/ui/components/ui/button";
+import { useTranslation } from "@multica/core/i18n";
 import { useLoadMoreDoneIssues } from "@multica/core/issues/mutations";
 import type { MyIssuesFilter } from "@multica/core/issues/queries";
 import {
@@ -329,11 +330,12 @@ function HiddenColumnsPanel({
   issues: Issue[];
 }) {
   const viewStoreApi = useViewStoreApi();
+  const { t } = useTranslation('issues');
   return (
     <div className="flex w-[240px] shrink-0 flex-col">
       <div className="mb-2 flex items-center gap-2 px-1">
         <span className="text-sm font-medium text-muted-foreground">
-          Hidden columns
+          {t('board.hiddenColumns')}
         </span>
       </div>
       <div className="flex-1 space-y-0.5">
@@ -370,7 +372,7 @@ function HiddenColumnsPanel({
                       }
                     >
                       <Eye className="size-3.5" />
-                      Show column
+                      {t('board.showColumn')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -1,0 +1,62 @@
+{
+  "title": "技能",
+  "addSkill": "添加工作区技能",
+  "createOrImport": "创建新技能或从 ClawHub / Skills.sh 导入",
+  "import": "导入",
+  "createSkill": "创建技能",
+  "fields": {
+    "name": "名称",
+    "namePlaceholder": "例如 代码审查、Bug 分类",
+    "description": "描述",
+    "descriptionPlaceholder": "简要描述此技能的功能",
+    "url": "技能 URL",
+    "urlPlaceholder": "粘贴技能 URL...",
+    "filePath": "文件路径",
+    "filePathPlaceholder": "如 templates/review.md"
+  },
+  "sources": {
+    "supported": "支持的平台",
+    "clawHub": "ClawHub",
+    "skillsDotSh": "Skills.sh"
+  },
+  "messages": {
+    "importFailed": "导入失败",
+    "importingClawHub": "正在从 ClawHub 导入...",
+    "importingSkillsSh": "正在从 Skills.sh 导入...",
+    "importing": "导入中...",
+    "created": "技能已创建",
+    "imported": "技能已导入",
+    "saved": "技能已保存",
+    "saving": "保存中...",
+    "failedToSave": "保存技能失败",
+    "deleted": "技能已删除",
+    "failedToDelete": "删除技能失败",
+    "failedToLoadFiles": "加载技能文件失败",
+    "fileExists": "文件已存在"
+  },
+  "noSkills": "暂无工作区技能",
+  "skillsDescription": "工作区技能在团队内共享，并注入到代理运行中。已安装到本地运行时的技能会自动使用。",
+  "skillsAutoAvailable": "已安装到本地运行时的技能会自动可用",
+  "selectSkill": "选择一个技能查看详情",
+  "selectSkillDescription": "工作区技能补充你的本地技能，并在团队内共享。",
+  "tabs": {
+    "files": "文件",
+    "addFile": "添加文件",
+    "deleteFile": "删除文件",
+    "preview": "预览",
+    "noFiles": "无文件"
+  },
+  "deleteConfirm": "删除技能？",
+  "deleteWarning": "此操作将永久删除「{{name}}」并从所有代理中移除。",
+  "placeholders": {
+    "markdown": "编写 Markdown 内容...",
+    "fileContent": "文件内容...",
+    "noContent": "暂无内容",
+    "skillName": "技能名称"
+  },
+  "actions": {
+    "add": "添加",
+    "addFile": "添加文件"
+  },
+  "fileCount": "{{count}} 个文件"
+}

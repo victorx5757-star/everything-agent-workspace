@@ -70,6 +70,7 @@ import { AgentLiveCard, TaskRunHistory } from "./agent-live-card";
 import { BacklogAgentHintDialog } from "./backlog-agent-hint-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@multica/core/auth";
+import { useTranslation } from "@multica/core/i18n";
 import { useCurrentWorkspace, useWorkspacePaths } from "@multica/core/paths";
 import { useActorName } from "@multica/core/workspace/hooks";
 import { useWorkspaceId } from "@multica/core/hooks";
@@ -110,38 +111,45 @@ function priorityLabel(priority: string): string {
 function formatActivity(
   entry: TimelineEntry,
   resolveActorName?: (type: string, id: string) => string,
+  t?: (key: string, options?: Record<string, unknown>) => string,
 ): string {
   const details = (entry.details ?? {}) as Record<string, string>;
   switch (entry.action) {
     case "created":
-      return "created this issue";
+      return t ? t('activity.createdThisIssue') : "created this issue";
     case "status_changed":
-      return `changed status from ${statusLabel(details.from ?? "?")} to ${statusLabel(details.to ?? "?")}`;
+      return t
+        ? t('activity.changedStatusFrom', { from: statusLabel(details.from ?? "?"), to: statusLabel(details.to ?? "?") })
+        : `changed status from ${statusLabel(details.from ?? "?")} to ${statusLabel(details.to ?? "?")}`;
     case "priority_changed":
-      return `changed priority from ${priorityLabel(details.from ?? "?")} to ${priorityLabel(details.to ?? "?")}`;
+      return t
+        ? t('activity.changedPriorityFrom', { from: priorityLabel(details.from ?? "?"), to: priorityLabel(details.to ?? "?") })
+        : `changed priority from ${priorityLabel(details.from ?? "?")} to ${priorityLabel(details.to ?? "?")}`;
     case "assignee_changed": {
       const isSelfAssign = details.to_type === entry.actor_type && details.to_id === entry.actor_id;
-      if (isSelfAssign) return "self-assigned this issue";
+      if (isSelfAssign) return t ? t('activity.selfAssigned') : "self-assigned this issue";
       const toName = details.to_id && details.to_type && resolveActorName
         ? resolveActorName(details.to_type, details.to_id)
         : null;
-      if (toName) return `assigned to ${toName}`;
-      if (details.from_id && !details.to_id) return "removed assignee";
-      return "changed assignee";
+      if (toName) return t ? t('activity.assignedTo', { name: toName }) : `assigned to ${toName}`;
+      if (details.from_id && !details.to_id) return t ? t('activity.removedAssignee') : "removed assignee";
+      return t ? t('activity.changedAssignee') : "changed assignee";
     }
     case "due_date_changed": {
-      if (!details.to) return "removed due date";
+      if (!details.to) return t ? t('activity.removedDueDate') : "removed due date";
       const formatted = new Date(details.to).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      return `set due date to ${formatted}`;
+      return t ? t('activity.setDueDateTo', { date: formatted }) : `set due date to ${formatted}`;
     }
     case "title_changed":
-      return `renamed this issue from "${details.from ?? "?"}" to "${details.to ?? "?"}"`;
+      return t
+        ? t('activity.renamedIssue', { from: details.from ?? "?", to: details.to ?? "?" })
+        : `renamed this issue from "${details.from ?? "?"}" to "${details.to ?? "?"}"`;
     case "description_updated":
-      return "updated the description";
+      return t ? t('activity.updatedDescription') : "updated the description";
     case "task_completed":
-      return "completed the task";
+      return t ? t('activity.completedTask') : "completed the task";
     case "task_failed":
-      return "task failed";
+      return t ? t('activity.taskFailed') : "task failed";
     default:
       return entry.action ?? "";
   }
@@ -200,6 +208,7 @@ function IssuePickerDialog({
   onSelect: (issue: Issue) => void;
 }) {
   const [query, setQuery] = useState("");
+  const { t } = useTranslation('issues');
   const [results, setResults] = useState<Issue[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -261,7 +270,7 @@ function IssuePickerDialog({
     >
       <Command shouldFilter={false}>
         <CommandInput
-          placeholder="Search issues..."
+          placeholder={t('detail.searchIssues')}
           value={query}
           onValueChange={(v) => {
             setQuery(v);
@@ -271,15 +280,15 @@ function IssuePickerDialog({
         <CommandList>
           {isLoading && (
             <div className="py-6 text-center text-sm text-muted-foreground">
-              Searching...
+              {t('detail.searching')}
             </div>
           )}
           {!isLoading && query.trim() && results.length === 0 && (
-            <CommandEmpty>No issues found.</CommandEmpty>
+            <CommandEmpty>{t('detail.noIssuesFound')}</CommandEmpty>
           )}
           {!isLoading && !query.trim() && (
             <div className="py-6 text-center text-sm text-muted-foreground">
-              Type to search issues
+              {t('detail.typeToSearch')}
             </div>
           )}
           {results.length > 0 && (
@@ -330,6 +339,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
   const userId = useAuthStore((s) => s.user?.id);
   const workspace = useCurrentWorkspace();
   const paths = useWorkspacePaths();
+  const { t } = useTranslation('issues');
 
   // Issue navigation — read from TQ list cache
   const wsId = useWorkspaceId();
@@ -455,7 +465,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
       if (!issue) return;
       updateIssueMutation.mutate(
         { id, ...updates },
-        { onError: () => toast.error("Failed to update issue") },
+        { onError: () => toast.error(t('messages.failedToUpdate')) },
       );
       // Hint: assigning an agent to a backlog issue won't trigger execution
       // until the issue is moved to an active status.
@@ -487,11 +497,11 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
     setDeleting(true);
     try {
       await deleteIssueMutation.mutateAsync(issue!.id);
-      toast.success("Issue deleted");
+      toast.success(t('messages.deleted'));
       if (onDelete) onDelete();
       else router.push(paths.issues());
     } catch {
-      toast.error("Failed to delete issue");
+      toast.error(t('messages.failedToDelete'));
       setDeleting(false);
     }
   };
@@ -550,11 +560,11 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
   if (!issue) {
     return (
       <div className="flex flex-1 min-h-0 flex-col items-center justify-center gap-3 text-sm text-muted-foreground">
-        <p>This issue does not exist or has been deleted in this workspace.</p>
+        <p>{t('detail.notFound')}</p>
         {!onDelete && (
           <Button variant="outline" size="sm" onClick={() => router.push(paths.issues())}>
             <ChevronLeft className="mr-1 h-3.5 w-3.5" />
-            Back to Issues
+            {t('detail.backToIssues')}
           </Button>
         )}
       </div>
@@ -569,23 +579,23 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
           className={`flex w-full items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors mb-2 hover:bg-accent/70 ${propertiesOpen ? "" : "text-muted-foreground hover:text-foreground"}`}
           onClick={() => setPropertiesOpen(!propertiesOpen)}
         >
-          Properties
+          {t('detail.properties')}
           <ChevronRight className={`!size-3 shrink-0 stroke-[2.5] text-muted-foreground transition-transform ${propertiesOpen ? "rotate-90" : ""}`} />
         </button>
         {propertiesOpen && <div className="space-y-0.5 pl-2">
-          <PropRow label="Status">
+          <PropRow label={t('fields.status')}>
             <StatusPicker status={issue.status} onUpdate={handleUpdateField} align="start" />
           </PropRow>
-          <PropRow label="Priority">
+          <PropRow label={t('fields.priority')}>
             <PriorityPicker priority={issue.priority} onUpdate={handleUpdateField} align="start" />
           </PropRow>
-          <PropRow label="Assignee">
+          <PropRow label={t('fields.assignee')}>
             <AssigneePicker assigneeType={issue.assignee_type} assigneeId={issue.assignee_id} onUpdate={handleUpdateField} align="start" />
           </PropRow>
-          <PropRow label="Due date">
+          <PropRow label={t('fields.dueDate')}>
             <DueDatePicker dueDate={issue.due_date} onUpdate={handleUpdateField} />
           </PropRow>
-          <PropRow label="Project">
+          <PropRow label={t('fields.project')}>
             <ProjectPicker projectId={issue.project_id} onUpdate={handleUpdateField} />
           </PropRow>
         </div>}
@@ -598,7 +608,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
             className={`flex w-full items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors mb-2 hover:bg-accent/70 ${parentIssueOpen ? "" : "text-muted-foreground hover:text-foreground"}`}
             onClick={() => setParentIssueOpen(!parentIssueOpen)}
           >
-            Parent issue
+            {t('detail.parentIssue')}
             <ChevronRight className={`!size-3 shrink-0 stroke-[2.5] text-muted-foreground transition-transform ${parentIssueOpen ? "rotate-90" : ""}`} />
           </button>
           {parentIssueOpen && <div className="pl-2">
@@ -620,18 +630,18 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
           className={`flex w-full items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors mb-2 hover:bg-accent/70 ${detailsOpen ? "" : "text-muted-foreground hover:text-foreground"}`}
           onClick={() => setDetailsOpen(!detailsOpen)}
         >
-          Details
+          {t('detail.details')}
           <ChevronRight className={`!size-3 shrink-0 stroke-[2.5] text-muted-foreground transition-transform ${detailsOpen ? "rotate-90" : ""}`} />
         </button>
         {detailsOpen && <div className="space-y-0.5 pl-2">
-          <PropRow label="Created by">
+          <PropRow label={t('fields.createdBy')}>
             <ActorAvatar actorType={issue.creator_type} actorId={issue.creator_id} size={18} />
             <span className="truncate">{getActorName(issue.creator_type, issue.creator_id)}</span>
           </PropRow>
-          <PropRow label="Created">
+          <PropRow label={t('fields.created')}>
             <span className="text-muted-foreground">{shortDate(issue.created_at)}</span>
           </PropRow>
-          <PropRow label="Updated">
+          <PropRow label={t('fields.updated')}>
             <span className="text-muted-foreground">{shortDate(issue.updated_at)}</span>
           </PropRow>
         </div>}
@@ -644,24 +654,24 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
             className={`flex w-full items-center gap-1 rounded-md px-2 py-1 text-xs font-medium transition-colors mb-2 hover:bg-accent/70 ${tokenUsageOpen ? "" : "text-muted-foreground hover:text-foreground"}`}
             onClick={() => setTokenUsageOpen(!tokenUsageOpen)}
           >
-            Token usage
+            {t('fields.tokenUsage')}
             <ChevronRight className={`!size-3 shrink-0 stroke-[2.5] text-muted-foreground transition-transform ${tokenUsageOpen ? "rotate-90" : ""}`} />
           </button>
           {tokenUsageOpen && <div className="space-y-0.5 pl-2">
-            <PropRow label="Input">
+            <PropRow label={t('fields.input')}>
               <span className="text-muted-foreground">{formatTokenCount(usage.total_input_tokens)}</span>
             </PropRow>
-            <PropRow label="Output">
+            <PropRow label={t('fields.output')}>
               <span className="text-muted-foreground">{formatTokenCount(usage.total_output_tokens)}</span>
             </PropRow>
             {(usage.total_cache_read_tokens > 0 || usage.total_cache_write_tokens > 0) && (
-              <PropRow label="Cache">
+              <PropRow label={t('fields.cache')}>
                 <span className="text-muted-foreground">
-                  {formatTokenCount(usage.total_cache_read_tokens)} read / {formatTokenCount(usage.total_cache_write_tokens)} write
+                  {t('detail.cacheReadWrite', { read: formatTokenCount(usage.total_cache_read_tokens), write: formatTokenCount(usage.total_cache_write_tokens) })}
                 </span>
               </PropRow>
             )}
-            <PropRow label="Runs">
+            <PropRow label={t('fields.runs')}>
               <span className="text-muted-foreground">{usage.task_count}</span>
             </PropRow>
           </div>}
@@ -722,7 +732,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   </Button>
                 }
               />
-              <TooltipContent side="bottom">{isPinned ? "Unpin from sidebar" : "Pin to sidebar"}</TooltipContent>
+              <TooltipContent side="bottom">{isPinned ? t('detail.unpinFromSidebar') : t('detail.pinToSidebar')}</TooltipContent>
             </Tooltip>
             <DropdownMenu>
               <DropdownMenuTrigger
@@ -737,7 +747,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <StatusIcon status={issue.status} className="h-3.5 w-3.5" />
-                    Status
+                    {t('fields.status')}
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     {ALL_STATUSES.map((s) => (
@@ -757,7 +767,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <PriorityIcon priority={issue.priority} />
-                    Priority
+                    {t('fields.priority')}
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     {PRIORITY_ORDER.map((p) => (
@@ -779,14 +789,14 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <UserMinus className="h-3.5 w-3.5" />
-                    Assignee
+                    {t('fields.assignee')}
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     <DropdownMenuItem
                       onClick={() => handleUpdateField({ assignee_type: null, assignee_id: null })}
                     >
                       <UserMinus className="h-3.5 w-3.5 text-muted-foreground" />
-                      Unassigned
+                      {t('detail.unassigned')}
                       {!issue.assignee_type && <span className="ml-auto text-xs text-muted-foreground">✓</span>}
                     </DropdownMenuItem>
                     {members.map((m) => (
@@ -816,29 +826,29 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
                     <Calendar className="h-3.5 w-3.5" />
-                    Due date
+                    {t('fields.dueDate')}
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
                     <DropdownMenuItem onClick={() => handleUpdateField({ due_date: new Date().toISOString() })}>
-                      Today
+                      {t('detail.today')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
                       const d = new Date(); d.setDate(d.getDate() + 1);
                       handleUpdateField({ due_date: d.toISOString() });
                     }}>
-                      Tomorrow
+                      {t('detail.tomorrow')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
                       const d = new Date(); d.setDate(d.getDate() + 7);
                       handleUpdateField({ due_date: d.toISOString() });
                     }}>
-                      Next week
+                      {t('detail.nextWeek')}
                     </DropdownMenuItem>
                     {issue.due_date && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => handleUpdateField({ due_date: null })}>
-                          Clear date
+                          {t('detail.clearDate')}
                         </DropdownMenuItem>
                       </>
                     )}
@@ -855,19 +865,19 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   });
                 }}>
                   <Plus className="h-3.5 w-3.5" />
-                  Create sub-issue
+                  {t('detail.createSubIssue')}
                 </DropdownMenuItem>
 
                 {/* Add as sub-issue of another issue */}
                 <DropdownMenuItem onClick={() => setParentPickerOpen(true)}>
                   <ArrowUp className="h-3.5 w-3.5" />
-                  Set parent issue...
+                  {t('detail.setParentIssueMenu')}
                 </DropdownMenuItem>
 
                 {/* Add another issue as sub-issue */}
                 <DropdownMenuItem onClick={() => setChildPickerOpen(true)}>
                   <ArrowDown className="h-3.5 w-3.5" />
-                  Add sub-issue...
+                  {t('detail.addSubIssueMenu')}
                 </DropdownMenuItem>
 
                 {/* Pin / Unpin */}
@@ -879,7 +889,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   }
                 }}>
                   {isPinned ? <PinOff className="h-3.5 w-3.5" /> : <Pin className="h-3.5 w-3.5" />}
-                  {isPinned ? "Unpin from sidebar" : "Pin to sidebar"}
+                  {isPinned ? t('detail.unpinFromSidebar') : t('detail.pinToSidebar')}
                 </DropdownMenuItem>
 
                 {/* Copy link */}
@@ -888,7 +898,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                     ? router.getShareableUrl(router.pathname)
                     : window.location.href;
                   navigator.clipboard.writeText(url);
-                  toast.success("Link copied");
+                  toast.success(t('messages.linkCopied'));
                 }}>
                   <Link2 className="h-3.5 w-3.5" />
                   Copy link
@@ -928,7 +938,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   </Button>
                 }
               />
-              <TooltipContent side="bottom">Toggle sidebar</TooltipContent>
+              <TooltipContent side="bottom">{t('detail.toggleSidebar')}</TooltipContent>
             </Tooltip>
           </div>
         </PageHeader>
@@ -937,9 +947,9 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
             <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Delete issue</AlertDialogTitle>
+                  <AlertDialogTitle>{t('detail.deleteIssue')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete this issue and all its comments. This action cannot be undone.
+                    {t('detail.deleteDescription')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -949,7 +959,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                     disabled={deleting}
                     className="bg-destructive text-white hover:bg-destructive/90"
                   >
-                    {deleting ? "Deleting..." : "Delete"}
+                    {deleting ? t('detail.deleting') : t('detail.delete')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -964,7 +974,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
               onMoveToTodo={() => {
                 updateIssueMutation.mutate(
                   { id, status: "todo" },
-                  { onError: () => toast.error("Failed to update status") },
+                  { onError: () => toast.error(t('messages.failedToUpdateStatus')) },
                 );
                 setBacklogHintOpen(false);
               }}
@@ -974,12 +984,12 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
             <IssuePickerDialog
               open={parentPickerOpen}
               onOpenChange={setParentPickerOpen}
-              title="Set parent issue"
-              description="Search for an issue to set as the parent of this issue"
+              title={t('detail.setParentIssueTitle')}
+              description={t('detail.setParentIssueDesc')}
               excludeIds={[id, ...childIssues.map((c) => c.id)]}
               onSelect={(selected) => {
                 handleUpdateField({ parent_issue_id: selected.id });
-                toast.success(`Set ${selected.identifier} as parent issue`);
+                toast.success(t('messages.setParentIssue', { identifier: selected.identifier }));
               }}
             />
 
@@ -987,15 +997,15 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
             <IssuePickerDialog
               open={childPickerOpen}
               onOpenChange={setChildPickerOpen}
-              title="Add sub-issue"
-              description="Search for an issue to add as a sub-issue"
+              title={t('detail.addSubIssueTitle')}
+              description={t('detail.addSubIssueDesc')}
               excludeIds={[id, ...(parentIssueId ? [parentIssueId] : []), ...childIssues.map((c) => c.id)]}
               onSelect={(selected) => {
                 updateIssueMutation.mutate(
                   { id: selected.id, parent_issue_id: id },
-                  { onError: () => toast.error("Failed to add sub-issue") },
+                  { onError: () => toast.error(t('messages.failedToAddSubIssue')) },
                 );
-                toast.success(`Added ${selected.identifier} as sub-issue`);
+                toast.success(t('messages.addedSubIssue', { identifier: selected.identifier }));
               }}
             />
 
@@ -1005,7 +1015,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
           <TitleEditor
             key={`title-${id}`}
             defaultValue={issue.title}
-            placeholder="Issue title"
+            placeholder={t('detail.issueTitle')}
             className="w-full text-2xl font-bold leading-snug tracking-tight"
             onBlur={(value) => {
               const trimmed = value.trim();
@@ -1018,7 +1028,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
               href={paths.issueDetail(parentIssue.id)}
               className="mt-2 inline-flex max-w-full items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors group/parent"
             >
-              <span className="font-medium shrink-0">Sub-issue of</span>
+              <span className="font-medium shrink-0">{t('detail.subIssueOf')}</span>
               <StatusIcon status={parentIssue.status} className="h-3.5 w-3.5 shrink-0" />
               <span className="tabular-nums shrink-0">{parentIssue.identifier}</span>
               <span className="truncate group-hover/parent:text-foreground">
@@ -1043,7 +1053,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
               ref={descEditorRef}
               key={id}
               defaultValue={issue.description || ""}
-              placeholder="Add description..."
+              placeholder={t('detail.addDescription')}
               onUpdate={(md) => handleUpdateField({ description: md })}
               onUploadFile={handleDescriptionUpload}
               debounceMs={1500}
@@ -1085,7 +1095,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                 }
               >
                 <Plus className="h-3.5 w-3.5" />
-                <span>Add sub-issues</span>
+                <span>{t('detail.addSubIssues')}</span>
               </button>
             </div>
           )}
@@ -1106,7 +1116,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                         subIssuesCollapsed && "-rotate-90",
                       )}
                     />
-                    <span>Sub-issues</span>
+                    <span>{t('detail.subIssues')}</span>
                   </button>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-muted/60 px-2 py-0.5">
                     <ProgressRing done={doneCount} total={childIssues.length} size={11} />
@@ -1126,13 +1136,13 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                               parent_issue_identifier: issue.identifier,
                             })
                           }
-                          aria-label="Add sub-issue"
+                          aria-label={t('detail.addSubIssue')}
                         >
                           <Plus className="h-4 w-4" />
                         </button>
                       }
                     />
-                    <TooltipContent side="bottom">Add sub-issue</TooltipContent>
+                    <TooltipContent side="bottom">{t('detail.addSubIssue')}</TooltipContent>
                   </Tooltip>
                 </div>
 
@@ -1193,7 +1203,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
           <div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <h2 className="text-base font-semibold">Activity</h2>
+                <h2 className="text-base font-semibold">{t('detail.activity')}</h2>
               </div>
               <div className="flex items-center gap-2">
                 {subscribersLoading ? (
@@ -1209,7 +1219,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   onClick={handleToggleSubscribe}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                  {isSubscribed ? t('detail.unsubscribe') : t('detail.subscribe')}
                 </button>
                 <Popover>
                   <PopoverTrigger className="cursor-pointer hover:opacity-80 transition-opacity">
@@ -1235,11 +1245,11 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                   </PopoverTrigger>
                   <PopoverContent align="end" className="w-64 p-0">
                     <Command>
-                      <CommandInput placeholder="Change subscribers..." />
+                      <CommandInput placeholder={t('detail.changeSubscribers')} />
                       <CommandList className="max-h-64">
-                        <CommandEmpty>No results found</CommandEmpty>
+                        <CommandEmpty>{t('detail.noResultsFound')}</CommandEmpty>
                         {members.length > 0 && (
-                          <CommandGroup heading="Members">
+                          <CommandGroup heading={t('detail.members')}>
                             {members.filter((m, i, arr) => arr.findIndex((x) => x.user_id === m.user_id) === i).map((m) => {
                               const sub = subscribers.find((s) => s.user_type === "member" && s.user_id === m.user_id);
                               const isSubbed = !!sub;
@@ -1259,7 +1269,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                           </CommandGroup>
                         )}
                         {agents.filter((a) => !a.archived_at).length > 0 && (
-                          <CommandGroup heading="Agents">
+                          <CommandGroup heading={t('detail.agents')}>
                             {agents.filter((a) => !a.archived_at).map((a) => {
                               const sub = subscribers.find((s) => s.user_type === "agent" && s.user_id === a.id);
                               const isSubbed = !!sub;
@@ -1402,7 +1412,7 @@ export function IssueDetail({ issueId, onDelete, defaultSidebarOpen = true, layo
                             </div>
                             <div className="flex min-w-0 flex-1 items-center gap-1">
                               <span className="shrink-0 font-medium">{getActorName(entry.actor_type, entry.actor_id)}</span>
-                              <span className="truncate">{formatActivity(entry, getActorName)}</span>
+                              <span className="truncate">{formatActivity(entry, getActorName, t)}</span>
                               <Tooltip>
                                 <TooltipTrigger
                                   render={

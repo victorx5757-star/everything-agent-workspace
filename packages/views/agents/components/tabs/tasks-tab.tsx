@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ListTodo } from "lucide-react";
 import type { Agent, AgentTask } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 import { Skeleton } from "@multica/ui/components/ui/skeleton";
 import { api } from "@multica/core/api";
 import { useWorkspaceId } from "@multica/core/hooks";
@@ -11,6 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { taskStatusConfig } from "../../config";
 
 export function TasksTab({ agent }: { agent: Agent }) {
+  const { t } = useTranslation("agents");
   const [tasks, setTasks] = useState<AgentTask[]>([]);
   const [loading, setLoading] = useState(true);
   const wsId = useWorkspaceId();
@@ -60,18 +62,18 @@ export function TasksTab({ agent }: { agent: Agent }) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-semibold">Task Queue</h3>
+        <h3 className="text-sm font-semibold">{t("tasks.taskQueue")}</h3>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Issues assigned to this agent and their execution status.
+          {t("tasks.taskQueueDescription")}
         </p>
       </div>
 
       {tasks.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
           <ListTodo className="h-8 w-8 text-muted-foreground/40" />
-          <p className="mt-3 text-sm text-muted-foreground">No tasks in queue</p>
+          <p className="mt-3 text-sm text-muted-foreground">{t("tasks.noTasks")}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Assign an issue to this agent to get started.
+            {t("tasks.assignPrompt")}
           </p>
         </div>
       ) : (
@@ -112,14 +114,14 @@ export function TasksTab({ agent }: { agent: Agent }) {
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">
                     {isRunning && task.started_at
-                      ? `Started ${new Date(task.started_at).toLocaleString()}`
+                      ? `${t("tasks.started")} ${new Date(task.started_at).toLocaleString()}`
                       : task.status === "dispatched" && task.dispatched_at
-                        ? `Dispatched ${new Date(task.dispatched_at).toLocaleString()}`
+                        ? `${t("tasks.dispatched")} ${new Date(task.dispatched_at).toLocaleString()}`
                         : task.status === "completed" && task.completed_at
-                          ? `Completed ${new Date(task.completed_at).toLocaleString()}`
+                          ? `${t("tasks.completed")} ${new Date(task.completed_at).toLocaleString()}`
                           : task.status === "failed" && task.completed_at
-                            ? `Failed ${new Date(task.completed_at).toLocaleString()}`
-                            : `Queued ${new Date(task.created_at).toLocaleString()}`}
+                            ? `${t("tasks.failed")} ${new Date(task.completed_at).toLocaleString()}`
+                            : `${t("tasks.queued")} ${new Date(task.created_at).toLocaleString()}`}
                   </div>
                 </div>
                 <span className={`shrink-0 text-xs font-medium ${config.color}`}>

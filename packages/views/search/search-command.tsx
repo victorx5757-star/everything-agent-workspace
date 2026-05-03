@@ -38,6 +38,7 @@ import {
 } from "@multica/ui/components/ui/dialog";
 import { useNavigation } from "../navigation";
 import { useSearchStore } from "./search-store";
+import { useTranslation } from "@multica/core/i18n";
 
 function HighlightText({ text, query }: { text: string; query: string }) {
   const parts = useMemo(() => {
@@ -90,20 +91,20 @@ type NavKey =
 
 interface NavPage {
   key: NavKey;
-  label: string;
+  i18nKey: string;
   icon: LucideIcon;
   keywords: string[];
 }
 
 const navPages: NavPage[] = [
-  { key: "inbox", label: "Inbox", icon: Inbox, keywords: ["inbox", "notifications"] },
-  { key: "myIssues", label: "My Issues", icon: CircleUser, keywords: ["my", "issues", "assigned"] },
-  { key: "issues", label: "Issues", icon: ListTodo, keywords: ["issues", "tasks", "bugs"] },
-  { key: "projects", label: "Projects", icon: FolderKanban, keywords: ["projects", "kanban"] },
-  { key: "agents", label: "Agents", icon: Bot, keywords: ["agents", "bots", "ai"] },
-  { key: "runtimes", label: "Runtimes", icon: Monitor, keywords: ["runtimes", "environments"] },
-  { key: "skills", label: "Skills", icon: BookOpenText, keywords: ["skills", "library"] },
-  { key: "settings", label: "Settings", icon: Settings, keywords: ["settings", "config", "preferences"] },
+  { key: "inbox", i18nKey: "inbox", icon: Inbox, keywords: ["inbox", "notifications"] },
+  { key: "myIssues", i18nKey: "myIssues", icon: CircleUser, keywords: ["my", "issues", "assigned"] },
+  { key: "issues", i18nKey: "issues", icon: ListTodo, keywords: ["issues", "tasks", "bugs"] },
+  { key: "projects", i18nKey: "projects", icon: FolderKanban, keywords: ["projects", "kanban"] },
+  { key: "agents", i18nKey: "agents", icon: Bot, keywords: ["agents", "bots", "ai"] },
+  { key: "runtimes", i18nKey: "runtimes", icon: Monitor, keywords: ["runtimes", "environments"] },
+  { key: "skills", i18nKey: "skills", icon: BookOpenText, keywords: ["skills", "library"] },
+  { key: "settings", i18nKey: "settings", icon: Settings, keywords: ["settings", "config", "preferences"] },
 ];
 
 interface SearchResults {
@@ -113,6 +114,8 @@ interface SearchResults {
 
 export function SearchCommand() {
   const { push } = useNavigation();
+  const { t: tn } = useTranslation('navigation');
+  const { t: tl } = useTranslation('layout');
   const open = useSearchStore((s) => s.open);
   const setOpen = useSearchStore((s) => s.setOpen);
   const recentItems = useRecentIssuesStore((s) => s.items);
@@ -139,10 +142,10 @@ export function SearchCommand() {
     if (!q) return [];
     return navPages.filter(
       (page) =>
-        page.label.toLowerCase().includes(q) ||
+        tn(page.i18nKey).toLowerCase().includes(q) ||
         page.keywords.some((kw) => kw.includes(q)),
     );
-  }, [query]);
+  }, [query, tn]);
 
   const hasResults = results.issues.length > 0 || results.projects.length > 0;
 
@@ -270,9 +273,9 @@ export function SearchCommand() {
         showCloseButton={false}
       >
         <DialogHeader className="sr-only">
-          <DialogTitle>Search</DialogTitle>
+          <DialogTitle>{tl('searchTitle')}</DialogTitle>
           <DialogDescription>
-            Search pages, issues, and projects
+            {tl('searchDescription')}
           </DialogDescription>
         </DialogHeader>
         <CommandPrimitive
@@ -283,7 +286,7 @@ export function SearchCommand() {
           <div className="flex items-center gap-3 border-b px-4 py-3">
             <SearchIcon className="size-5 shrink-0 text-muted-foreground" />
             <CommandPrimitive.Input
-              placeholder="Type a command or search..."
+              placeholder={tl('typeToSearch')}
               value={query}
               onValueChange={handleValueChange}
               className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
@@ -299,7 +302,7 @@ export function SearchCommand() {
             {filteredPages.length > 0 && (
               <CommandPrimitive.Group className="p-2">
                 <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                  Pages
+                  {tl('pages')}
                 </div>
                 {filteredPages.map((page) => (
                   <CommandPrimitive.Item
@@ -310,7 +313,7 @@ export function SearchCommand() {
                   >
                     <page.icon className="size-4 shrink-0 text-muted-foreground" />
                     <span className="truncate">
-                      <HighlightText text={page.label} query={query} />
+                      <HighlightText text={tn(page.i18nKey)} query={query} />
                     </span>
                   </CommandPrimitive.Item>
                 ))}
@@ -325,13 +328,13 @@ export function SearchCommand() {
 
             {!isLoading && query.trim() && !hasResults && filteredPages.length === 0 && (
               <CommandPrimitive.Empty className="py-10 text-center text-sm text-muted-foreground">
-                No results found.
+                {tl('noResults')}
               </CommandPrimitive.Empty>
             )}
 
             {!isLoading && results.projects.length > 0 && (
               <CommandPrimitive.Group
-                heading="Projects"
+                heading={tl('projects')}
                 className="p-2 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
               >
                 {results.projects.map((project) => (
@@ -372,7 +375,7 @@ export function SearchCommand() {
 
             {!isLoading && results.issues.length > 0 && (
               <CommandPrimitive.Group
-                heading="Issues"
+                heading={tl('issues')}
                 className="p-2 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground"
               >
                 {results.issues.map((issue) => (
@@ -420,7 +423,7 @@ export function SearchCommand() {
               <CommandPrimitive.Group className="p-2">
                 <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-muted-foreground">
                   <Clock className="size-3" />
-                  <span>Recent</span>
+                  <span>{tl('recent')}</span>
                 </div>
                 {recentIssues.map((item) => (
                   <CommandPrimitive.Item
@@ -449,8 +452,8 @@ export function SearchCommand() {
 
             {!isLoading && !query.trim() && recentIssues.length === 0 && (
               <div className="flex flex-col items-center gap-2 py-10 text-sm text-muted-foreground">
-                <span>Type to search issues and projects...</span>
-                <span className="text-xs">Press <kbd className="rounded bg-muted px-1.5 py-0.5 font-medium">⌘K</kbd> to open this anytime</span>
+                <span>{tl('typeToSearchHint')}</span>
+                <span className="text-xs">{tl('searchShortcutHint')}</span>
               </div>
             )}
           </CommandPrimitive.List>

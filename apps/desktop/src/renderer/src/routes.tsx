@@ -24,6 +24,7 @@ import { OnboardingWizard } from "@multica/views/onboarding";
 import { InvitePage } from "@multica/views/invite";
 import { useNavigation } from "@multica/views/navigation";
 import { paths } from "@multica/core/paths";
+import { i18n } from "@multica/core/i18n";
 import { workspaceListOptions } from "@multica/core/workspace/queries";
 import { Server } from "lucide-react";
 import { DaemonSettingsTab } from "./components/daemon-settings-tab";
@@ -122,57 +123,57 @@ export const appRoutes: RouteObject[] = [
       {
         path: "onboarding",
         element: <OnboardingRoute />,
-        handle: { title: "Get Started" },
+        handle: { title: i18n.t("desktop:routes.getStarted") },
       },
       {
         path: "invite/:id",
         element: <InviteRoute />,
-        handle: { title: "Accept Invite" },
+        handle: { title: i18n.t("desktop:routes.acceptInvite") },
       },
       {
         path: ":workspaceSlug",
         element: <WorkspaceRouteLayout />,
         children: [
           { index: true, element: <Navigate to="issues" replace /> },
-          { path: "issues", element: <IssuesPage />, handle: { title: "Issues" } },
+          { path: "issues", element: <IssuesPage />, handle: { title: i18n.t("desktop:routes.issues") } },
           {
             path: "issues/:id",
             element: <IssueDetailPage />,
-            handle: { title: "Issue" },
+            handle: { title: i18n.t("desktop:routes.issue") },
           },
           {
             path: "projects",
             element: <ProjectsPage />,
-            handle: { title: "Projects" },
+            handle: { title: i18n.t("desktop:routes.projects") },
           },
           {
             path: "projects/:id",
             element: <ProjectDetailPage />,
-            handle: { title: "Project" },
+            handle: { title: i18n.t("desktop:routes.project") },
           },
           {
             path: "autopilots",
             element: <AutopilotsPage />,
-            handle: { title: "Autopilot" },
+            handle: { title: i18n.t("desktop:routes.autopilot") },
           },
           {
             path: "autopilots/:id",
             element: <AutopilotDetailPage />,
-            handle: { title: "Autopilot" },
+            handle: { title: i18n.t("desktop:routes.autopilot") },
           },
           {
             path: "my-issues",
             element: <MyIssuesPage />,
-            handle: { title: "My Issues" },
+            handle: { title: i18n.t("desktop:routes.myIssues") },
           },
           {
             path: "runtimes",
             element: <RuntimesPage topSlot={<DaemonRuntimeCard />} />,
-            handle: { title: "Runtimes" },
+            handle: { title: i18n.t("desktop:routes.runtimes") },
           },
-          { path: "skills", element: <SkillsPage />, handle: { title: "Skills" } },
-          { path: "agents", element: <AgentsPage />, handle: { title: "Agents" } },
-          { path: "inbox", element: <InboxPage />, handle: { title: "Inbox" } },
+          { path: "skills", element: <SkillsPage />, handle: { title: i18n.t("desktop:routes.skills") } },
+          { path: "agents", element: <AgentsPage />, handle: { title: i18n.t("desktop:routes.agents") } },
+          { path: "inbox", element: <InboxPage />, handle: { title: i18n.t("desktop:routes.inbox") } },
           {
             path: "settings",
             element: (
@@ -180,14 +181,14 @@ export const appRoutes: RouteObject[] = [
                 extraAccountTabs={[
                   {
                     value: "daemon",
-                    label: "Daemon",
+                    label: i18n.t("desktop:routes.daemon"),
                     icon: Server,
                     content: <DaemonSettingsTab />,
                   },
                 ]}
               />
             ),
-            handle: { title: "Settings" },
+            handle: { title: i18n.t("desktop:routes.settings") },
           },
         ],
       },

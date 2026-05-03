@@ -60,6 +60,7 @@ import {
   useIssuesScopeStore,
   type IssuesScope,
 } from "@multica/core/issues/stores/issues-scope-store";
+import { useTranslation } from "@multica/core/i18n";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@multica/ui/components/ui/tooltip";
 import type { Issue } from "@multica/core/types";
 
@@ -142,10 +143,10 @@ function useIssueCounts(allIssues: Issue[]) {
 // Scope config
 // ---------------------------------------------------------------------------
 
-const SCOPES: { value: IssuesScope; label: string; description: string }[] = [
-  { value: "all", label: "All", description: "All issues in this workspace" },
-  { value: "members", label: "Members", description: "Issues assigned to team members" },
-  { value: "agents", label: "Agents", description: "Issues assigned to AI agents" },
+const SCOPES = [
+  { value: "all" as IssuesScope, labelKey: "scope.all", descriptionKey: "scope.allDescription" },
+  { value: "members" as IssuesScope, labelKey: "scope.members", descriptionKey: "scope.membersDescription" },
+  { value: "agents" as IssuesScope, labelKey: "scope.agents", descriptionKey: "scope.agentsDescription" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -381,6 +382,7 @@ function ProjectSubContent({
 // ---------------------------------------------------------------------------
 
 export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
+  const { t } = useTranslation("issues");
   const scope = useIssuesScopeStore((s) => s.scope);
   const setScope = useIssuesScopeStore((s) => s.setScope);
 
@@ -431,11 +433,11 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                   }
                   onClick={() => setScope(s.value)}
                 >
-                  {s.label}
+                  {t(s.labelKey)}
                 </Button>
               }
             />
-            <TooltipContent side="bottom">{s.description}</TooltipContent>
+            <TooltipContent side="bottom">{t(s.descriptionKey)}</TooltipContent>
           </Tooltip>
         ))}
       </div>
@@ -459,14 +461,14 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                 />
               }
             />
-            <TooltipContent side="bottom">Filter</TooltipContent>
+            <TooltipContent side="bottom">{t("filter")}</TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="end" className="w-auto">
             {/* Status */}
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <CircleDot className="size-3.5" />
-                <span className="flex-1">Status</span>
+                <span className="flex-1">{t("fields.status")}</span>
                 {statusFilters.length > 0 && (
                   <span className="text-xs text-primary font-medium">
                     {statusFilters.length}
@@ -489,7 +491,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                       {STATUS_CONFIG[s].label}
                       {count > 0 && (
                         <span className="ml-auto text-xs text-muted-foreground">
-                          {count} {count === 1 ? "issue" : "issues"}
+                          {count} {t("display.issue", { count })}
                         </span>
                       )}
                     </DropdownMenuCheckboxItem>
@@ -502,7 +504,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <SignalHigh className="size-3.5" />
-                <span className="flex-1">Priority</span>
+                <span className="flex-1">{t("fields.priority")}</span>
                 {priorityFilters.length > 0 && (
                   <span className="text-xs text-primary font-medium">
                     {priorityFilters.length}
@@ -525,7 +527,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                       {PRIORITY_CONFIG[p].label}
                       {count > 0 && (
                         <span className="ml-auto text-xs text-muted-foreground">
-                          {count} {count === 1 ? "issue" : "issues"}
+                          {count} {t("display.issue", { count })}
                         </span>
                       )}
                     </DropdownMenuCheckboxItem>
@@ -538,7 +540,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <User className="size-3.5" />
-                <span className="flex-1">Assignee</span>
+                <span className="flex-1">{t("fields.assignee")}</span>
                 {(assigneeFilters.length > 0 || includeNoAssignee) && (
                   <span className="text-xs text-primary font-medium">
                     {assigneeFilters.length + (includeNoAssignee ? 1 : 0)}
@@ -562,7 +564,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <UserPen className="size-3.5" />
-                <span className="flex-1">Creator</span>
+                <span className="flex-1">{t("fields.creator")}</span>
                 {creatorFilters.length > 0 && (
                   <span className="text-xs text-primary font-medium">
                     {creatorFilters.length}
@@ -582,7 +584,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 <FolderKanban className="size-3.5" />
-                <span className="flex-1">Project</span>
+                <span className="flex-1">{t("fields.project")}</span>
                 {(projectFilters.length > 0 || includeNoProject) && (
                   <span className="text-xs text-primary font-medium">
                     {projectFilters.length + (includeNoProject ? 1 : 0)}
@@ -606,7 +608,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={act.clearFilters}>
-                  Reset all filters
+                  {t("display.resetAllFilters")}
                 </DropdownMenuItem>
               </>
             )}
@@ -627,12 +629,12 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                 />
               }
             />
-            <TooltipContent side="bottom">Display settings</TooltipContent>
+            <TooltipContent side="bottom">{t("display.settings")}</TooltipContent>
           </Tooltip>
           <PopoverContent align="end" className="w-64 p-0">
             <div className="border-b px-3 py-2.5">
               <span className="text-xs font-medium text-muted-foreground">
-                Ordering
+                {t("display.ordering")}
               </span>
               <div className="mt-2 flex items-center gap-1.5">
                 <DropdownMenu>
@@ -665,7 +667,7 @@ export function IssuesHeader({ scopedIssues }: { scopedIssues: Issue[] }) {
                   onClick={() =>
                     act.setSortDirection(sortDirection === "asc" ? "desc" : "asc")
                   }
-                  title={sortDirection === "asc" ? "Ascending" : "Descending"}
+                  title={sortDirection === "asc" ? t("sort.ascending") : t("sort.descending")}
                 >
                   {sortDirection === "asc" ? (
                     <ArrowUp className="size-3.5" />

@@ -1,0 +1,25 @@
+{
+  "askMultica": "Ask Multica",
+  "newChat": "New chat",
+  "sessionArchived": "This session is archived",
+  "welcomeMessage": "Welcome to Multica",
+  "hiIm": "Hi, I'm {{name}}",
+  "multicaWorking": "Multica is working...",
+  "unreadChat": "{{count}} unread chat",
+  "unreadChat_other": "{{count}} unread chats",
+  "tryAsking": "Try asking",
+  "noPreviousChats": "No previous chats",
+  "noAgents": "No agents",
+  "myAgents": "My agents",
+  "others": "Others",
+  "restore": "Restore",
+  "expand": "Expand",
+  "minimize": "Minimize",
+  "tellAgent": "Tell {{name}} what to do…",
+  "tellMe": "Tell me what to do…",
+  "suggestions": {
+    "listTasks": "List my open tasks by priority",
+    "summarize": "Summarize the latest discussion on the backend refactor",
+    "planNext": "Plan what to work on next"
+  }
+}

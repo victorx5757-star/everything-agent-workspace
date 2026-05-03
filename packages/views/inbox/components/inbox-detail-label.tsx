@@ -2,27 +2,28 @@
 
 import { STATUS_CONFIG, PRIORITY_CONFIG } from "@multica/core/issues/config";
 import { useActorName } from "@multica/core/workspace/hooks";
+import { useTranslation } from "@multica/core/i18n";
 import { StatusIcon, PriorityIcon } from "../../issues/components";
 import type { InboxItem, InboxItemType, IssueStatus, IssuePriority } from "@multica/core/types";
 
-const typeLabels: Record<InboxItemType, string> = {
-  issue_assigned: "Assigned",
-  unassigned: "Unassigned",
-  assignee_changed: "Assignee changed",
-  status_changed: "Status changed",
-  priority_changed: "Priority changed",
-  due_date_changed: "Due date changed",
-  new_comment: "New comment",
-  mentioned: "Mentioned",
-  review_requested: "Review requested",
-  task_completed: "Task completed",
-  task_failed: "Task failed",
-  agent_blocked: "Agent blocked",
-  agent_completed: "Agent completed",
-  reaction_added: "Reacted",
+const typeLabelKeys: Record<InboxItemType, string> = {
+  issue_assigned: "activity.assigned",
+  unassigned: "activity.unassigned",
+  assignee_changed: "activity.assigneeChanged",
+  status_changed: "activity.statusChanged",
+  priority_changed: "activity.priorityChanged",
+  due_date_changed: "activity.dueDateChanged",
+  new_comment: "activity.newComment",
+  mentioned: "activity.mentioned",
+  review_requested: "activity.reviewRequested",
+  task_completed: "activity.taskCompleted",
+  task_failed: "activity.taskFailed",
+  agent_blocked: "activity.agentBlocked",
+  agent_completed: "activity.agentCompleted",
+  reaction_added: "activity.reacted",
 };
 
-export { typeLabels };
+export { typeLabelKeys };
 
 function shortDate(dateStr: string): string {
   if (!dateStr) return "";
@@ -34,26 +35,27 @@ function shortDate(dateStr: string): string {
 
 export function InboxDetailLabel({ item }: { item: InboxItem }) {
   const { getActorName } = useActorName();
+  const { t } = useTranslation("inbox");
   const details = item.details ?? {};
 
   switch (item.type) {
     case "status_changed": {
-      if (!details.to) return <span>{typeLabels[item.type]}</span>;
+      if (!details.to) return <span>{t(typeLabelKeys[item.type])}</span>;
       const label = STATUS_CONFIG[details.to as IssueStatus]?.label ?? details.to;
       return (
         <span className="inline-flex items-center gap-1">
-          Set status to
+          {t("activity.setStatus")}
           <StatusIcon status={details.to as IssueStatus} className="h-3 w-3" />
           {label}
         </span>
       );
     }
     case "priority_changed": {
-      if (!details.to) return <span>{typeLabels[item.type]}</span>;
+      if (!details.to) return <span>{t(typeLabelKeys[item.type])}</span>;
       const label = PRIORITY_CONFIG[details.to as IssuePriority]?.label ?? details.to;
       return (
         <span className="inline-flex items-center gap-1">
-          Set priority to
+          {t("activity.setPriority")}
           <PriorityIcon priority={details.to as IssuePriority} className="h-3 w-3" />
           {label}
         </span>
@@ -61,32 +63,32 @@ export function InboxDetailLabel({ item }: { item: InboxItem }) {
     }
     case "issue_assigned": {
       if (details.new_assignee_id) {
-        return <span>Assigned to {getActorName(details.new_assignee_type ?? "member", details.new_assignee_id)}</span>;
+        return <span>{t("activity.assignedTo", { name: getActorName(details.new_assignee_type ?? "member", details.new_assignee_id) })}</span>;
       }
-      return <span>{typeLabels[item.type]}</span>;
+      return <span>{t(typeLabelKeys[item.type])}</span>;
     }
     case "unassigned":
-      return <span>Removed assignee</span>;
+      return <span>{t("activity.removedAssignee")}</span>;
     case "assignee_changed": {
       if (details.new_assignee_id) {
-        return <span>Assigned to {getActorName(details.new_assignee_type ?? "member", details.new_assignee_id)}</span>;
+        return <span>{t("activity.assignedTo", { name: getActorName(details.new_assignee_type ?? "member", details.new_assignee_id) })}</span>;
       }
-      return <span>{typeLabels[item.type]}</span>;
+      return <span>{t(typeLabelKeys[item.type])}</span>;
     }
     case "due_date_changed": {
-      if (details.to) return <span>Set due date to {shortDate(details.to)}</span>;
-      return <span>Removed due date</span>;
+      if (details.to) return <span>{t("activity.setDueDateTo", { date: shortDate(details.to) })}</span>;
+      return <span>{t("activity.removedDueDate")}</span>;
     }
     case "new_comment": {
       if (item.body) return <span>{item.body}</span>;
-      return <span>{typeLabels[item.type]}</span>;
+      return <span>{t(typeLabelKeys[item.type])}</span>;
     }
     case "reaction_added": {
       const emoji = details.emoji;
-      if (emoji) return <span>Reacted {emoji} to your comment</span>;
-      return <span>{typeLabels[item.type]}</span>;
+      if (emoji) return <span>{t("activity.reactedEmoji", { emoji })}</span>;
+      return <span>{t(typeLabelKeys[item.type])}</span>;
     }
     default:
-      return <span>{typeLabels[item.type] ?? item.type}</span>;
+      return <span>{t(typeLabelKeys[item.type] as string) ?? item.type}</span>;
   }
 }

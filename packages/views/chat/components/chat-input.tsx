@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { ContentEditor, type ContentEditorRef } from "../../editor";
 import { SubmitButton } from "@multica/ui/components/common/submit-button";
 import { useChatStore, DRAFT_NEW_SESSION } from "@multica/core/chat";
+import { useTranslation } from "@multica/core/i18n";
 import { createLogger } from "@multica/core/logger";
 
 const logger = createLogger("chat.ui");
@@ -44,6 +45,7 @@ export function ChatInput({
   const setInputDraft = useChatStore((s) => s.setInputDraft);
   const clearInputDraft = useChatStore((s) => s.clearInputDraft);
   const [isEmpty, setIsEmpty] = useState(!inputDraft.trim());
+  const { t } = useTranslation('chat');
 
   const handleSend = () => {
     const content = editorRef.current?.getMarkdown()?.replace(/(\n\s*)+$/, "").trim();
@@ -67,10 +69,10 @@ export function ChatInput({
   };
 
   const placeholder = disabled
-    ? "This session is archived"
+    ? t("sessionArchived")
     : agentName
-      ? `Tell ${agentName} what to do…`
-      : "Tell me what to do…";
+      ? t("tellAgent", { name: agentName })
+      : t("tellMe");
 
   return (
     <div className="px-5 pb-3 pt-0">

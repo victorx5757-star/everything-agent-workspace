@@ -16,7 +16,7 @@ import { useTranslation } from "@multica/core/i18n";
 import type { Workspace, WorkspaceRepo } from "@multica/core/types";
 
 export function RepositoriesTab() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('settings');
   const user = useAuthStore((s) => s.user);
   const workspace = useCurrentWorkspace();
   const wsId = useWorkspaceId();
@@ -41,9 +41,9 @@ export function RepositoriesTab() {
       qc.setQueryData(workspaceKeys.list(), (old: Workspace[] | undefined) =>
         old?.map((ws) => (ws.id === updated.id ? updated : ws)),
       );
-      toast.success(t.settings.repositories.saved);
+      toast.success(t('repositories.saved'));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : t.settings.repositories.failedToSave);
+      toast.error(e instanceof Error ? e.message : t('repositories.failedToSave'));
     } finally {
       setSaving(false);
     }
@@ -66,12 +66,12 @@ export function RepositoriesTab() {
   return (
     <div className="space-y-8">
       <section className="space-y-4">
-        <h2 className="text-sm font-semibold">{t.settings.repositories.title}</h2>
+        <h2 className="text-sm font-semibold">{t('repositories.title')}</h2>
 
         <Card>
           <CardContent className="space-y-3">
             <p className="text-xs text-muted-foreground">
-              {t.settings.repositories.description}
+              {t('repositories.description')}
             </p>
 
             {repos.map((repo, index) => (
@@ -82,7 +82,7 @@ export function RepositoriesTab() {
                     value={repo.url}
                     onChange={(e) => handleRepoChange(index, "url", e.target.value)}
                     disabled={!canManageWorkspace}
-                    placeholder={t.settings.repositories.urlPlaceholder}
+                    placeholder={t('repositories.urlPlaceholder')}
                     className="text-sm"
                   />
                   <Input
@@ -90,7 +90,7 @@ export function RepositoriesTab() {
                     value={repo.description}
                     onChange={(e) => handleRepoChange(index, "description", e.target.value)}
                     disabled={!canManageWorkspace}
-                    placeholder={t.settings.repositories.descriptionPlaceholder}
+                    placeholder={t('repositories.descriptionPlaceholder')}
                     className="text-sm"
                   />
                 </div>
@@ -111,7 +111,7 @@ export function RepositoriesTab() {
               <div className="flex items-center justify-between pt-1">
                 <Button variant="outline" size="sm" onClick={handleAddRepo}>
                   <Plus className="h-3 w-3" />
-                  {t.settings.repositories.addRepository}
+                  {t('repositories.addRepository')}
                 </Button>
                 <Button
                   size="sm"
@@ -119,14 +119,14 @@ export function RepositoriesTab() {
                   disabled={saving}
                 >
                   <Save className="h-3 w-3" />
-                  {saving ? t.settings.repositories.saving : t.settings.repositories.save}
+                  {saving ? t('repositories.saving') : t('repositories.save')}
                 </Button>
               </div>
             )}
 
             {!canManageWorkspace && (
               <p className="text-xs text-muted-foreground">
-                {t.settings.repositories.permissionDenied}
+                {t('repositories.permissionDenied')}
               </p>
             )}
           </CardContent>

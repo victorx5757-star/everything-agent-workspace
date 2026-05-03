@@ -1,0 +1,43 @@
+{
+  "title": "收件箱",
+  "markAllRead": "全部标为已读",
+  "archiveAll": "全部归档",
+  "archiveAllRead": "归档所有已读",
+  "archiveCompleted": "归档已完成",
+  "noNotifications": "无通知",
+  "inboxEmpty": "收件箱为空",
+  "selectNotification": "选择一条通知查看详情",
+  "archive": "归档",
+  "failedMarkRead": "标记已读失败",
+  "failedArchive": "归档失败",
+  "failedMarkAllRead": "全部标记已读失败",
+  "failedArchiveAll": "全部归档失败",
+  "failedArchiveRead": "归档已读项失败",
+  "failedArchiveCompleted": "归档已完成项失败",
+  "time": {
+    "justNow": "刚刚"
+  },
+  "activity": {
+    "assigned": "已分配",
+    "unassigned": "已取消分配",
+    "assigneeChanged": "负责人已变更",
+    "statusChanged": "状态已变更",
+    "priorityChanged": "优先级已变更",
+    "dueDateChanged": "截止日期已变更",
+    "newComment": "新评论",
+    "mentioned": "提到了你",
+    "reviewRequested": "请求审阅",
+    "taskCompleted": "任务完成",
+    "taskFailed": "任务失败",
+    "agentBlocked": "代理被阻塞",
+    "agentCompleted": "代理已完成",
+    "reacted": "回应了",
+    "setStatus": "状态设为",
+    "setPriority": "优先级设为",
+    "setDueDate": "截止日期设为",
+    "removedDueDate": "已移除截止日期",
+    "assignedTo": "分配给 {{name}}",
+    "removedAssignee": "移除负责人",
+    "reactedEmoji": "对你的评论回应了 {{emoji}}"
+  }
+}

@@ -7,6 +7,7 @@ import {
   Activity,
 } from "lucide-react";
 import { cn } from "@multica/ui/lib/utils";
+import { useTranslation } from "@multica/core/i18n";
 import { Button } from "@multica/ui/components/ui/button";
 import { toast } from "sonner";
 import { DaemonPanel } from "./daemon-panel";
@@ -14,6 +15,7 @@ import type { DaemonStatus } from "../../../shared/daemon-types";
 import { DAEMON_STATE_COLORS, DAEMON_STATE_LABELS, formatUptime } from "../../../shared/daemon-types";
 
 export function DaemonRuntimeCard() {
+  const { t } = useTranslation("desktop");
   const [status, setStatus] = useState<DaemonStatus>({ state: "stopped" });
   const [panelOpen, setPanelOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
@@ -32,7 +34,7 @@ export function DaemonRuntimeCard() {
     const result = await window.daemonAPI.start();
     if (!result.success) {
       setActionLoading(false);
-      toast.error("Failed to start daemon", { description: result.error });
+      toast.error(t("daemon.failedToStart"), { description: result.error });
     }
   }, []);
 
@@ -40,7 +42,7 @@ export function DaemonRuntimeCard() {
     setActionLoading(true);
     const result = await window.daemonAPI.stop();
     if (!result.success) {
-      toast.error("Failed to stop daemon", { description: result.error });
+      toast.error(t("daemon.failedToStop"), { description: result.error });
     }
   }, []);
 
@@ -48,7 +50,7 @@ export function DaemonRuntimeCard() {
     setActionLoading(true);
     const result = await window.daemonAPI.restart();
     if (!result.success) {
-      toast.error("Failed to restart daemon", { description: result.error });
+      toast.error(t("daemon.failedToRestart"), { description: result.error });
     }
   }, []);
 
@@ -78,7 +80,7 @@ export function DaemonRuntimeCard() {
               <Server className="size-4 text-muted-foreground" />
             </div>
             <div>
-              <h3 className="text-sm font-medium">Local Daemon</h3>
+              <h3 className="text-sm font-medium">{t("daemon.title")}</h3>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className={cn("size-1.5 rounded-full", DAEMON_STATE_COLORS[status.state])} />
                 <span className="text-xs text-muted-foreground">{DAEMON_STATE_LABELS[status.state]}</span>

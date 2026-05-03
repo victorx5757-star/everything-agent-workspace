@@ -7,6 +7,7 @@ import { ContentEditor, type ContentEditorRef, useFileDropZone, FileDropOverlay 
 import { FileUploadButton } from "@multica/ui/components/common/file-upload-button";
 import { useFileUpload } from "@multica/core/hooks/use-file-upload";
 import { api } from "@multica/core/api";
+import { useTranslation } from "@multica/core/i18n";
 
 interface CommentInputProps {
   issueId: string;
@@ -14,6 +15,7 @@ interface CommentInputProps {
 }
 
 function CommentInput({ issueId, onSubmit }: CommentInputProps) {
+  const { t } = useTranslation('issues');
   const editorRef = useRef<ContentEditorRef>(null);
   const [isEmpty, setIsEmpty] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -53,7 +55,7 @@ function CommentInput({ issueId, onSubmit }: CommentInputProps) {
       <div className="flex-1 min-h-0 overflow-y-auto px-3 py-2">
         <ContentEditor
           ref={editorRef}
-          placeholder="Leave a comment..."
+          placeholder={t('commentPlaceholder')}
           onUpdate={(md) => setIsEmpty(!md.trim())}
           onSubmit={handleSubmit}
           onUploadFile={handleUpload}

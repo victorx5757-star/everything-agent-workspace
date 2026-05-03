@@ -1,0 +1,43 @@
+{
+  "title": "Inbox",
+  "markAllRead": "Mark all as read",
+  "archiveAll": "Archive all",
+  "archiveAllRead": "Archive all read",
+  "archiveCompleted": "Archive completed",
+  "noNotifications": "No notifications",
+  "inboxEmpty": "Your inbox is empty",
+  "selectNotification": "Select a notification to view details",
+  "archive": "Archive",
+  "failedMarkRead": "Failed to mark as read",
+  "failedArchive": "Failed to archive",
+  "failedMarkAllRead": "Failed to mark all as read",
+  "failedArchiveAll": "Failed to archive all",
+  "failedArchiveRead": "Failed to archive read items",
+  "failedArchiveCompleted": "Failed to archive completed",
+  "time": {
+    "justNow": "just now"
+  },
+  "activity": {
+    "assigned": "Assigned",
+    "unassigned": "Unassigned",
+    "assigneeChanged": "Assignee changed",
+    "statusChanged": "Status changed",
+    "priorityChanged": "Priority changed",
+    "dueDateChanged": "Due date changed",
+    "newComment": "New comment",
+    "mentioned": "Mentioned",
+    "reviewRequested": "Review requested",
+    "taskCompleted": "Task completed",
+    "taskFailed": "Task failed",
+    "agentBlocked": "Agent blocked",
+    "agentCompleted": "Agent completed",
+    "reacted": "Reacted",
+    "setStatus": "Set status to",
+    "setPriority": "Set priority to",
+    "setDueDate": "Set due date to",
+    "removedDueDate": "Removed due date",
+    "assignedTo": "Assigned to {{name}}",
+    "removedAssignee": "Removed assignee",
+    "reactedEmoji": "Reacted {{emoji}} to your comment"
+  }
+}

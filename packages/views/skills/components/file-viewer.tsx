@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { Pencil, Eye } from "lucide-react";
+import { useTranslation } from "@multica/core/i18n";
 import { Button } from "@multica/ui/components/ui/button";
 import { Textarea } from "@multica/ui/components/ui/textarea";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@multica/ui/components/ui/tooltip";
@@ -87,6 +88,8 @@ export function FileViewer({
   content: string;
   onChange: (content: string) => void;
 }) {
+  const { t } = useTranslation('skills');
+  const { t: tc } = useTranslation('common');
   const [editing, setEditing] = useState(false);
   const isMd = isMarkdown(path);
 
@@ -122,7 +125,7 @@ export function FileViewer({
                 }
               />
               <TooltipContent>
-                {editing ? "Preview" : "Edit"}
+                {editing ? t('tabs.preview') : tc('edit')}
               </TooltipContent>
             </Tooltip>
           )}
@@ -135,7 +138,7 @@ export function FileViewer({
           <div className="p-6">
             {frontmatter && <FrontmatterCard data={frontmatter} />}
             <Markdown mode="full">
-              {body || "*No content yet*"}
+              {body || `*${t('placeholders.noContent')}*`}
             </Markdown>
           </div>
         ) : (
@@ -144,8 +147,8 @@ export function FileViewer({
             onChange={(e) => onChange(e.target.value)}
             placeholder={
               isMd
-                ? "Write markdown content..."
-                : "File content..."
+                ? t('placeholders.markdown')
+                : t('placeholders.fileContent')
             }
             className="h-full min-h-full resize-none rounded-none border-0 font-mono text-sm leading-relaxed focus-visible:ring-0"
           />

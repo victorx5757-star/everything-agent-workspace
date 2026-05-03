@@ -1,0 +1,87 @@
+{
+  "title": "Runtimes",
+  "noRuntimesRegistered": "No runtimes registered",
+  "noRuntimesOwned": "No runtimes owned by you",
+  "noRuntimesForOwner": "No runtimes for this owner",
+  "updateAvailable": "Update available",
+  "lastSeen": "Last Seen",
+  "justNow": "Just now",
+  "runtimeDeleted": "Runtime deleted",
+  "testingConnection": "Testing...",
+  "testConnection": "Test Connection",
+  "updateFailed": "Update failed",
+  "cacheRead": "Cache Read",
+  "cacheWrite": "Cache Write",
+  "noActivity": "No activity",
+  "mine": "Mine",
+  "all": "All",
+  "owner": "Owner",
+  "allOwners": "All owners",
+  "online": "online",
+  "registerHint": "to register a local runtime.",
+  "infoFields": {
+    "runtimeMode": "Runtime Mode",
+    "provider": "Provider",
+    "status": "Status",
+    "owner": "Owner",
+    "device": "Device",
+    "daemonId": "Daemon ID",
+    "cliVersion": "CLI Version",
+    "connectionTest": "Connection Test",
+    "tokenUsage": "Token Usage",
+    "metadata": "Metadata",
+    "created": "Created",
+    "updated": "Updated"
+  },
+  "sections": {
+    "cliVersion": "CLI Version",
+    "connectionTest": "Connection Test",
+    "tokenUsage": "Token Usage",
+    "metadata": "Metadata"
+  },
+  "update": {
+    "managedByDesktop": "Managed by Desktop",
+    "managedTooltip": "The CLI binary is managed by Multica Desktop — update Desktop to upgrade the CLI.",
+    "latest": "Latest",
+    "available": "available",
+    "update": "Update",
+    "cliVersionLabel": "CLI Version:",
+    "unknown": "unknown",
+    "pending": "Update pending",
+    "running": "Updating...",
+    "completed": "Update complete",
+    "timeout": "Update timed out"
+  },
+  "statusConfig": {
+    "pending": "Waiting for daemon...",
+    "running": "Running test...",
+    "completed": "Connected",
+    "failed": "Failed",
+    "timeout": "Timeout"
+  },
+  "delete": {
+    "title": "Delete Runtime",
+    "description": "Are you sure you want to delete",
+    "cannotUndo": "This action cannot be undone.",
+    "deleting": "Deleting...",
+    "confirm": "Delete"
+  },
+  "usage": {
+    "noData": "No usage data yet",
+    "input": "Input",
+    "output": "Output",
+    "estimatedCost": "Estimated cost",
+    "dailyTokenUsage": "Daily Token Usage",
+    "total": "Total",
+    "date": "Date",
+    "model": "Model",
+    "cacheR": "Cache R",
+    "cacheW": "Cache W"
+  },
+  "heatmap": {
+    "title": "Activity",
+    "less": "Less",
+    "more": "More",
+    "tokens": "tokens"
+  }
+}

@@ -2,6 +2,7 @@
 
 import { Cloud, Monitor } from "lucide-react";
 import type { Agent } from "@multica/core/types";
+import { useTranslation } from "@multica/core/i18n";
 import { ActorAvatar } from "../../common/actor-avatar";
 import { statusConfig } from "../config";
 
@@ -14,6 +15,7 @@ export function AgentListItem({
   isSelected: boolean;
   onClick: () => void;
 }) {
+  const { t } = useTranslation("agents");
   const st = statusConfig[agent.status];
   const isArchived = !!agent.archived_at;
 
@@ -37,7 +39,7 @@ export function AgentListItem({
         </div>
         <div className="flex items-center gap-1.5 mt-0.5">
           {isArchived ? (
-            <span className="text-xs text-muted-foreground">Archived</span>
+            <span className="text-xs text-muted-foreground">{t("labels.archived")}</span>
           ) : (
             <>
               <span className={`h-1.5 w-1.5 rounded-full ${st.dot}`} />

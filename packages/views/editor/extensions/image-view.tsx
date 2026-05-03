@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@multica/ui/lib/utils";
+import { useTranslation } from "@multica/core/i18n";
 
 // ---------------------------------------------------------------------------
 // Lightbox — full-screen image preview (ESC or click backdrop to close)
@@ -62,6 +63,8 @@ function ImageView({ node, editor, selected, deleteNode }: NodeViewProps) {
 
   const [lightbox, setLightbox] = useState(false);
   const isEditable = editor.isEditable;
+  const { t } = useTranslation("issues");
+  const { t: tc } = useTranslation("common");
 
   const handleView = () => setLightbox(true);
 
@@ -75,9 +78,9 @@ function ImageView({ node, editor, selected, deleteNode }: NodeViewProps) {
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(src);
-      toast.success("Link copied");
+      toast.success(t("messages.linkCopied"));
     } catch {
-      toast.error("Failed to copy link");
+      toast.error(tc("failedToCopyLink"));
     }
   };
 
@@ -113,7 +116,7 @@ function ImageView({ node, editor, selected, deleteNode }: NodeViewProps) {
             <button
               type="button"
               onClick={handleCopyLink}
-              title="Copy link"
+              title={t("editor.copyLink")}
             >
               <LinkIcon className="size-3.5" />
             </button>

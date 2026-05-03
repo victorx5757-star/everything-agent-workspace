@@ -2,20 +2,22 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Loader2, CheckCircle2, XCircle, Zap } from "lucide-react";
 import { Button } from "@multica/ui/components/ui/button";
 import { api } from "@multica/core/api";
+import { useTranslation } from "@multica/core/i18n";
 import type { RuntimePingStatus } from "@multica/core/types";
 
 const pingStatusConfig: Record<
   RuntimePingStatus,
-  { label: string; icon: typeof Loader2; color: string }
+  { labelKey: string; icon: typeof Loader2; color: string }
 > = {
-  pending: { label: "Waiting for daemon...", icon: Loader2, color: "text-muted-foreground" },
-  running: { label: "Running test...", icon: Loader2, color: "text-info" },
-  completed: { label: "Connected", icon: CheckCircle2, color: "text-success" },
-  failed: { label: "Failed", icon: XCircle, color: "text-destructive" },
-  timeout: { label: "Timeout", icon: XCircle, color: "text-warning" },
+  pending: { labelKey: "statusConfig.pending", icon: Loader2, color: "text-muted-foreground" },
+  running: { labelKey: "statusConfig.running", icon: Loader2, color: "text-info" },
+  completed: { labelKey: "statusConfig.completed", icon: CheckCircle2, color: "text-success" },
+  failed: { labelKey: "statusConfig.failed", icon: XCircle, color: "text-destructive" },
+  timeout: { labelKey: "statusConfig.timeout", icon: XCircle, color: "text-warning" },
 };
 
 export function PingSection({ runtimeId }: { runtimeId: string }) {
+  const { t } = useTranslation('runtimes');
   const [status, setStatus] = useState<RuntimePingStatus | null>(null);
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -73,6 +75,7 @@ export function PingSection({ runtimeId }: { runtimeId: string }) {
   const config = status ? pingStatusConfig[status] : null;
   const Icon = config?.icon;
   const isActive = status === "pending" || status === "running";
+  const statusLabel = config ? t(config.labelKey) : null;
 
   return (
     <div className="space-y-2">
@@ -88,13 +91,13 @@ export function PingSection({ runtimeId }: { runtimeId: string }) {
           ) : (
             <Zap className="h-3 w-3" />
           )}
-          {testing ? "Testing..." : "Test Connection"}
+          {testing ? t('testingConnection') : t('testConnection')}
         </Button>
 
         {config && Icon && (
           <span className={`inline-flex items-center gap-1 text-xs ${config.color}`}>
             <Icon className={`h-3 w-3 ${isActive ? "animate-spin" : ""}`} />
-            {config.label}
+            {statusLabel}
             {durationMs != null && (
               <span className="text-muted-foreground">
                 ({(durationMs / 1000).toFixed(1)}s)

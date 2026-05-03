@@ -1,0 +1,69 @@
+{
+  "welcome": "欢迎来到 Multica",
+  "getStarted": "开始使用",
+  "skipForNow": "暂时跳过",
+  "createWorkspace": "创建你的第一个工作区",
+  "createWorkspaceDescription": "创建工作区，开始使用 AI 代理。",
+  "setupRuntime": "连接运行时",
+  "setupRuntimeDescription": "安装 CLI 并运行下面的设置命令来连接你的机器。守护进程会自动检测 PATH 上的代理 CLI（Claude Code、Codex 等）。",
+  "runtimesConnected": "{{count}} 个运行时已连接",
+  "waitingForConnection": "等待连接...",
+  "createAgent": "创建你的第一个代理",
+  "agentTemplateDescription": "选择模板开始，然后自定义你的代理。",
+  "noRuntimeWarning": "无运行时连接。返回连接运行时，或跳过稍后设置。",
+  "noRuntimeAvailable": "无可用运行时",
+  "connectRuntimeFirst": "请先连接运行时",
+  "createAgentButton": "创建代理",
+  "backToTemplates": "返回模板",
+  "fields": {
+    "workspaceName": "工作区名称",
+    "workspaceNameLabel": "工作区名称",
+    "workspaceUrl": "工作区 URL",
+    "runtimeName": "运行时",
+    "provider": "提供商",
+    "model": "模型",
+    "agentName": "代理名称",
+    "instructions": "指令"
+  },
+  "placeholders": {
+    "workspaceName": "你的工作区叫什么？",
+    "workspaceUrl": "为你的工作区选择一个 URL",
+    "runtimeName": "为运行时命名",
+    "provider": "选择 AI 提供商",
+    "model": "选择模型",
+    "agentName": "例如 编码代理",
+    "instructions": "这个代理应该做什么？"
+  },
+  "messages": {
+    "chooseDifferentUrl": "选择其他工作区 URL",
+    "failedToCreateWorkspace": "创建工作区失败",
+    "failedToCreateAgent": "创建代理失败"
+  },
+  "visibility": {
+    "workspace": "工作区",
+    "private": "私有",
+    "allMembers": "所有成员可分配",
+    "onlyYou": "仅你可分配"
+  },
+  "completeSetup": "完成设置",
+  "allSet": "一切就绪！",
+  "workspaceReady": "工作区已就绪",
+  "workspaceReadyWithAgent": "工作区已就绪，{{name}} 正在执行第一个任务。",
+  "settingUpWorkspace": "正在设置工作区...",
+  "assignedTo": "已分配给 {{name}}",
+  "backlog": "待办",
+  "goToWorkspace": "进入工作区",
+  "creating": "创建中...",
+  "createWorkspaceButton": "创建工作区",
+  "presets": {
+    "masterAgent": "主代理",
+    "codingAgent": "编码代理",
+    "masterAgentDescription": "管理工作区、分配任务并协调工作",
+    "codingAgentDescription": "检出代码、实现功能并提交 PR"
+  },
+  "nextSteps": {
+    "repoConnection": "设置你的仓库连接",
+    "createSkill": "为你的代理创建一个技能",
+    "inviteTeammate": "邀请队友"
+  }
+}

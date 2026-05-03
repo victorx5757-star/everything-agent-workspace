@@ -22,6 +22,7 @@ import { Dialog, DialogContent, DialogTitle } from "@multica/ui/components/ui/di
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@multica/ui/components/ui/collapsible";
 import { ActorAvatar } from "../../common/actor-avatar";
 import { api } from "@multica/core/api";
+import { useTranslation, i18n } from "@multica/core/i18n";
 import type { AgentTask, Agent, AgentRuntime } from "@multica/core/types/agent";
 import { redactSecrets } from "../utils/redact";
 
@@ -76,20 +77,20 @@ const colorClasses: Record<EventColor, { bg: string; bgActive: string; label: st
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-function getEventLabel(item: TimelineItem): string {
+function getEventLabel(item: TimelineItem, t: (key: string) => string): string {
   switch (item.type) {
     case "text":
-      return "Agent";
+      return t('agent.eventAgent');
     case "thinking":
-      return "Thinking";
+      return t('agent.eventThinking');
     case "tool_use":
-      return item.tool ?? "Tool";
+      return item.tool ?? t('agent.eventTool');
     case "tool_result":
-      return item.tool ? `${item.tool}` : "Result";
+      return item.tool ? `${item.tool}` : t('agent.eventResult');
     case "error":
-      return "Error";
+      return t('agent.eventError');
     default:
-      return "Event";
+      return t('agent.eventEvent');
   }
 }
 
@@ -170,6 +171,7 @@ export function AgentTranscriptDialog({
   const [runtimeInfo, setRuntimeInfo] = useState<AgentRuntime | null>(null);
   const eventRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation('issues');
 
   // Fetch agent and runtime metadata when dialog opens
   useEffect(() => {
@@ -216,7 +218,7 @@ export function AgentTranscriptDialog({
   const handleCopyAll = useCallback(() => {
     const text = items
       .map((item) => {
-        const label = getEventLabel(item);
+        const label = getEventLabel(item, t);
         const summary = getEventSummary(item);
         return `[${label}] ${summary}`;
       })
@@ -225,7 +227,7 @@ export function AgentTranscriptDialog({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }, [items]);
+  }, [items, t]);
 
   // Duration
   const duration =
@@ -241,17 +243,17 @@ export function AgentTranscriptDialog({
   const statusBadge = isLive ? (
     <span className="inline-flex items-center gap-1 rounded-full bg-info/15 px-2 py-0.5 text-xs font-medium text-info">
       <Loader2 className="h-3 w-3 animate-spin" />
-      Running
+      {t('agent.statusRunning')}
     </span>
   ) : task.status === "completed" ? (
     <span className="inline-flex items-center gap-1 rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">
       <CheckCircle2 className="h-3 w-3" />
-      Completed
+      {t('agent.statusCompleted')}
     </span>
   ) : task.status === "failed" ? (
     <span className="inline-flex items-center gap-1 rounded-full bg-destructive/15 px-2 py-0.5 text-xs font-medium text-destructive">
       <XCircle className="h-3 w-3" />
-      Failed
+      {t('agent.statusFailed')}
     </span>
   ) : (
     <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground capitalize">
@@ -265,7 +267,7 @@ export function AgentTranscriptDialog({
         className="!max-w-4xl !w-[calc(100vw-4rem)] !max-h-[calc(100vh-4rem)] !h-[calc(100vh-4rem)] flex flex-col !p-0 !gap-0 overflow-hidden"
         showCloseButton={false}
       >
-        <DialogTitle className="sr-only">Agent Execution Transcript</DialogTitle>
+        <DialogTitle className="sr-only">{t('agent.agentExecutionTranscript')}</DialogTitle>
 
         {/* ── Header ─────────────────────────────────────────────── */}
         <div className="border-b px-4 py-3 shrink-0 space-y-2">
@@ -290,7 +292,7 @@ export function AgentTranscriptDialog({
                 className="flex items-center gap-1 rounded px-2 py-1 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
               >
                 {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                {copied ? "Copied" : "Copy all"}
+                {copied ? t('agent.copied') : t('agent.copyAll')}
               </button>
               <button
                 onClick={() => onOpenChange(false)}
@@ -336,9 +338,9 @@ export function AgentTranscriptDialog({
 
             {/* Event counts */}
             {toolCount > 0 && (
-              <MetadataChip>{toolCount} tool calls</MetadataChip>
+              <MetadataChip>{t('agent.toolCallsLabel', { count: toolCount })}</MetadataChip>
             )}
-            <MetadataChip>{items.length} events</MetadataChip>
+            <MetadataChip>{t('agent.eventsLabel', { count: items.length })}</MetadataChip>
 
             {/* Created time */}
             {task.created_at && (
@@ -361,6 +363,7 @@ export function AgentTranscriptDialog({
               items={items}
               selectedIdx={selectedIdx}
               onSegmentClick={handleSegmentClick}
+              t={t}
             />
           </div>
         )}
@@ -375,10 +378,10 @@ export function AgentTranscriptDialog({
               {isLive ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Waiting for events...
+                  {t('agent.waitingForEvents')}
                 </div>
               ) : (
-                "No execution data recorded."
+                t('agent.noExecutionData')
               )}
             </div>
           ) : (
@@ -418,12 +421,10 @@ function MetadataChip({ icon, children }: { icon?: React.ReactNode; children: Re
 }
 
 function formatProvider(provider: string): string {
-  const map: Record<string, string> = {
-    claude: "Claude Code",
-    "claude-code": "Claude Code",
-    codex: "Codex",
-  };
-  return map[provider.toLowerCase()] ?? provider;
+  const lower = provider.toLowerCase();
+  if (lower === "claude" || lower === "claude-code") return i18n.t("issues:agent.providerClaudeCode");
+  if (lower === "codex") return "Codex";
+  return provider;
 }
 
 // ─── Timeline bar (colored segments) ────────────────────────────────────────
@@ -432,10 +433,12 @@ function TimelineBar({
   items,
   selectedIdx,
   onSegmentClick,
+  t,
 }: {
   items: TimelineItem[];
   selectedIdx: number | null;
   onSegmentClick: (idx: number) => void;
+  t: (key: string) => string;
 }) {
   // Group consecutive items of the same color into segments for cleaner display
   const segments: { startIdx: number; endIdx: number; color: EventColor; count: number }[] = [];
@@ -475,12 +478,12 @@ function TimelineBar({
             )}
             style={{ width: `${Math.max(widthPercent, 0.5)}%` }}
             onClick={() => onSegmentClick(seg.startIdx)}
-            title={`${getEventLabel(items[seg.startIdx]!)}${seg.count > 1 ? ` (+${seg.count - 1} more)` : ""}`}
+            title={`${getEventLabel(items[seg.startIdx]!, t)}${seg.count > 1 ? ` (+${seg.count - 1} more)` : ""}`}
           >
             {/* Tooltip on hover */}
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block z-10 pointer-events-none">
               <div className="rounded bg-popover border px-2 py-1 text-[10px] text-popover-foreground shadow-md whitespace-nowrap">
-                {getEventLabel(items[seg.startIdx]!)}
+                {getEventLabel(items[seg.startIdx]!, t)}
                 {seg.count > 1 && <span className="text-muted-foreground ml-1">+{seg.count - 1}</span>}
               </div>
             </div>
@@ -508,8 +511,9 @@ const TranscriptEventRow = ({
   onClick: _onClick,
 }: TranscriptEventRowProps & { ref?: React.Ref<HTMLDivElement> }) => {
   const [expanded, setExpanded] = useState(false);
+  const { t } = useTranslation('issues');
   const color = getEventColor(item);
-  const label = getEventLabel(item);
+  const label = getEventLabel(item, t);
   const summary = getEventSummary(item);
 
   const hasDetail =

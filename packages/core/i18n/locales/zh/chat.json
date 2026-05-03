@@ -1,0 +1,25 @@
+{
+  "askMultica": "咨询 Multica",
+  "newChat": "新对话",
+  "sessionArchived": "此会话已归档",
+  "welcomeMessage": "欢迎使用 Multica",
+  "hiIm": "你好，我是{{name}}",
+  "multicaWorking": "Multica 正在处理...",
+  "unreadChat": "{{count}} 条未读消息",
+  "unreadChat_other": "{{count}} 条未读消息",
+  "tryAsking": "试试问我",
+  "noPreviousChats": "暂无历史对话",
+  "noAgents": "暂无助手",
+  "myAgents": "我的助手",
+  "others": "其他",
+  "restore": "还原",
+  "expand": "展开",
+  "minimize": "最小化",
+  "tellAgent": "告诉{{name}}要做什么…",
+  "tellMe": "告诉我需要做什么…",
+  "suggestions": {
+    "listTasks": "按优先级列出我的待办任务",
+    "summarize": "总结后端重构的最新讨论",
+    "planNext": "规划下一步工作"
+  }
+}

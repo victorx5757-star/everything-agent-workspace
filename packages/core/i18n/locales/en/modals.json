@@ -1,0 +1,30 @@
+{
+  "createWorkspace": {
+    "title": "Create a new workspace",
+    "description": "Workspaces are shared environments where teams can work on projects and issues.",
+    "namePlaceholder": "My Workspace",
+    "slugLabel": "Workspace Name",
+    "slugPlaceholder": "my-workspace",
+    "urlLabel": "Workspace URL",
+    "failedToCreate": "Failed to create workspace",
+    "back": "Back",
+    "chooseUrl": "Choose a different workspace URL",
+    "creating": "Creating...",
+    "create": "Create workspace"
+  },
+  "createIssue": {
+    "title": "New Issue",
+    "subIssueTitle": "New sub-issue",
+    "titleField": "Issue title",
+    "descriptionPlaceholder": "Add description...",
+    "selectProject": "Select a project",
+    "noProject": "No project",
+    "created": "Issue created",
+    "viewIssue": "View issue",
+    "failedToCreate": "Failed to create issue",
+    "creating": "Creating...",
+    "create": "Create Issue",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  }
+}

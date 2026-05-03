@@ -1,0 +1,30 @@
+{
+  "createWorkspace": {
+    "title": "创建新工作区",
+    "description": "工作区是团队协作处理项目和问题的共享环境。",
+    "namePlaceholder": "我的工作区",
+    "slugLabel": "工作区名称",
+    "slugPlaceholder": "my-workspace",
+    "urlLabel": "工作区 URL",
+    "failedToCreate": "创建工作区失败",
+    "back": "返回",
+    "chooseUrl": "选择其他工作区 URL",
+    "creating": "创建中...",
+    "create": "创建工作区"
+  },
+  "createIssue": {
+    "title": "新建问题",
+    "subIssueTitle": "新建子问题",
+    "titleField": "问题标题",
+    "descriptionPlaceholder": "添加描述...",
+    "selectProject": "选择项目",
+    "noProject": "无项目",
+    "created": "问题已创建",
+    "viewIssue": "查看问题",
+    "failedToCreate": "创建问题失败",
+    "creating": "创建中...",
+    "create": "创建问题",
+    "collapse": "收起",
+    "expand": "展开"
+  }
+}

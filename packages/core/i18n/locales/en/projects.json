@@ -1,0 +1,67 @@
+{
+  "title": "Projects",
+  "newProject": "New project",
+  "noProjects": "No projects yet",
+  "createFirst": "Create your first project",
+  "collapse": "Collapse",
+  "expand": "Expand",
+  "close": "Close",
+  "creating": "Creating...",
+  "createProject": "Create Project",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "projectNotFound": "Project not found",
+  "pinToSidebar": "Pin to sidebar",
+  "unpinFromSidebar": "Unpin from sidebar",
+  "noResults": "No results",
+  "fields": {
+    "name": "Name",
+    "priority": "Priority",
+    "status": "Status",
+    "progress": "Progress",
+    "lead": "Lead",
+    "created": "Created",
+    "members": "Members",
+    "agents": "Agents"
+  },
+  "lead": {
+    "assign": "Assign lead...",
+    "none": "No lead"
+  },
+  "properties": {
+    "description": "Description",
+    "addDescription": "Add description...",
+    "titlePlaceholder": "Project title"
+  },
+  "time": {
+    "today": "Today",
+    "oneDayAgo": "1d ago",
+    "daysAgo": "{{count}}d ago",
+    "monthsAgo": "{{count}}mo ago"
+  },
+  "messages": {
+    "created": "Project created",
+    "failedToCreate": "Failed to create project",
+    "deleted": "Project deleted",
+    "failedToDelete": "Failed to delete project",
+    "linkCopied": "Link copied",
+    "failedToMoveIssue": "Failed to move issue"
+  },
+  "actions": {
+    "deleteProject": "Delete project",
+    "deleteConfirm": "This will delete the project. Issues will not be deleted but will be unlinked.",
+    "copyLink": "Copy link",
+    "changeIcon": "Change icon",
+    "chooseIcon": "Choose icon",
+    "toggleSidebar": "Toggle sidebar"
+  },
+  "empty": {
+    "noIssuesLinked": "No issues linked",
+    "assignIssues": "Assign issues to this project from the issue detail page."
+  },
+  "picker": {
+    "noProject": "No project",
+    "removeFromProject": "Remove from project",
+    "noProjectsYet": "No projects yet"
+  }
+}

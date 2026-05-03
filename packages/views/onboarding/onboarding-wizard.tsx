@@ -8,12 +8,13 @@ import { StepWorkspace } from "./step-workspace";
 import { StepRuntime } from "./step-runtime";
 import { StepAgent } from "./step-agent";
 import { StepComplete } from "./step-complete";
+import { useTranslation } from "@multica/core/i18n";
 
-const STEPS = [
-  { label: "Workspace" },
-  { label: "Runtime" },
-  { label: "Agent" },
-  { label: "Get Started" },
+const STEP_LABELS = [
+  "fields.workspaceName",
+  "fields.runtimeName",
+  "fields.agentName",
+  "getStarted",
 ] as const;
 
 export interface OnboardingWizardProps {
@@ -26,6 +27,7 @@ export interface OnboardingWizardProps {
 }
 
 export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
+  const { t } = useTranslation("onboarding");
   // Canonical source for workspace existence: the React Query list cache. The
   // onboarding route itself is global (no slug in URL), so useCurrentWorkspace
   // can't help here — we read the list directly. `useCreateWorkspace` adds the
@@ -51,7 +53,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const startWorkspaceSetup = useCallback(() => setStep(1), []);
 
   const next = useCallback(
-    () => setStep((s) => Math.min(s + 1, STEPS.length - 1)),
+    () => setStep((s) => Math.min(s + 1, STEP_LABELS.length - 1)),
     [],
   );
 
@@ -59,8 +61,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     <div className="flex min-h-svh flex-col bg-background">
       {/* Progress bar */}
       <div className="flex items-center justify-center gap-2 px-6 pt-8">
-        {STEPS.map((s, i) => (
-          <div key={s.label} className="flex items-center gap-2">
+        {STEP_LABELS.map((labelKey, i) => (
+          <div key={labelKey} className="flex items-center gap-2">
             <div className="flex items-center gap-1.5">
               <div
                 className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium transition-colors ${
@@ -92,10 +94,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                     : "text-muted-foreground"
                 }`}
               >
-                {s.label}
+                {t(labelKey)}
               </span>
             </div>
-            {i < STEPS.length - 1 && (
+            {i < STEP_LABELS.length - 1 && (
               <div
                 className={`h-px w-8 ${i < step ? "bg-primary" : "bg-border"}`}
               />

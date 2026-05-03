@@ -1,4 +1,5 @@
 import type { RuntimeUsage } from "@multica/core/types";
+import { i18n } from "@multica/core/i18n";
 
 // ---------------------------------------------------------------------------
 // Formatting helpers
@@ -7,7 +8,7 @@ import type { RuntimeUsage } from "@multica/core/types";
 export function formatLastSeen(lastSeenAt: string | null): string {
   if (!lastSeenAt) return "Never";
   const diff = Date.now() - new Date(lastSeenAt).getTime();
-  if (diff < 60_000) return "Just now";
+  if (diff < 60_000) return i18n.t('runtimes:justNow');
   if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
   if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
   return `${Math.floor(diff / 86_400_000)}d ago`;

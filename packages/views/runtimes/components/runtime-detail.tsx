@@ -9,6 +9,7 @@ import { useAuthStore } from "@multica/core/auth";
 import { useWorkspaceId } from "@multica/core/hooks";
 import { memberListOptions } from "@multica/core/workspace/queries";
 import { useDeleteRuntime } from "@multica/core/runtimes/mutations";
+import { useTranslation } from "@multica/core/i18n";
 import { Button } from "@multica/ui/components/ui/button";
 import {
   AlertDialog,
@@ -51,6 +52,7 @@ function getLaunchedBy(metadata: Record<string, unknown>): string | null {
 }
 
 export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
+  const { t } = useTranslation('runtimes');
   const cliVersion =
     runtime.runtime_mode === "local" ? getCliVersion(runtime.metadata) : null;
   const launchedBy =
@@ -81,7 +83,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
   const handleDelete = () => {
     deleteMutation.mutate(runtime.id, {
       onSuccess: () => {
-        toast.success("Runtime deleted");
+        toast.success(t('runtimeDeleted'));
         setDeleteOpen(false);
       },
       onError: (e) => {
@@ -121,16 +123,16 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
       <div className="flex-1 overflow-y-auto p-6 space-y-6">
         {/* Info grid */}
         <div className="grid grid-cols-2 gap-4">
-          <InfoField label="Runtime Mode" value={runtime.runtime_mode} />
-          <InfoField label="Provider" value={runtime.provider} />
-          <InfoField label="Status" value={runtime.status} />
+          <InfoField label={t('infoFields.runtimeMode')} value={runtime.runtime_mode} />
+          <InfoField label={t('infoFields.provider')} value={runtime.provider} />
+          <InfoField label={t('infoFields.status')} value={runtime.status} />
           <InfoField
-            label="Last Seen"
+            label={t('lastSeen')}
             value={formatLastSeen(runtime.last_seen_at)}
           />
           {ownerMember && (
             <div>
-              <div className="text-xs text-muted-foreground mb-1">Owner</div>
+              <div className="text-xs text-muted-foreground mb-1">{t('infoFields.owner')}</div>
               <div className="flex items-center gap-2">
                 <ActorAvatar
                   actorType="member"
@@ -142,10 +144,10 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
             </div>
           )}
           {runtime.device_info && (
-            <InfoField label="Device" value={runtime.device_info} />
+            <InfoField label={t('infoFields.device')} value={runtime.device_info} />
           )}
           {runtime.daemon_id && (
-            <InfoField label="Daemon ID" value={runtime.daemon_id} mono />
+            <InfoField label={t('infoFields.daemonId')} value={runtime.daemon_id} mono />
           )}
         </div>
 
@@ -153,7 +155,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
         {runtime.runtime_mode === "local" && (
           <div>
             <h3 className="text-xs font-medium text-muted-foreground mb-3">
-              CLI Version
+              {t('sections.cliVersion')}
             </h3>
             <UpdateSection
               runtimeId={runtime.id}
@@ -167,7 +169,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
         {/* Connection Test */}
         <div>
           <h3 className="text-xs font-medium text-muted-foreground mb-3">
-            Connection Test
+            {t('sections.connectionTest')}
           </h3>
           <PingSection runtimeId={runtime.id} />
         </div>
@@ -175,7 +177,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
         {/* Usage */}
         <div>
           <h3 className="text-xs font-medium text-muted-foreground mb-3">
-            Token Usage
+            {t('sections.tokenUsage')}
           </h3>
           <UsageSection runtimeId={runtime.id} />
         </div>
@@ -184,7 +186,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
         {runtime.metadata && Object.keys(runtime.metadata).length > 0 && (
           <div>
             <h3 className="text-xs font-medium text-muted-foreground mb-2">
-              Metadata
+              {t('sections.metadata')}
             </h3>
             <div className="rounded-lg border bg-muted/30 p-3">
               <pre className="text-xs font-mono whitespace-pre-wrap break-all">
@@ -197,11 +199,11 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
         {/* Timestamps */}
         <div className="grid grid-cols-2 gap-4 border-t pt-4">
           <InfoField
-            label="Created"
+            label={t('infoFields.created')}
             value={new Date(runtime.created_at).toLocaleString()}
           />
           <InfoField
-            label="Updated"
+            label={t('infoFields.updated')}
             value={new Date(runtime.updated_at).toLocaleString()}
           />
         </div>
@@ -211,9 +213,9 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
       <AlertDialog open={deleteOpen} onOpenChange={(v) => { if (!v) setDeleteOpen(false); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Runtime</AlertDialogTitle>
+            <AlertDialogTitle>{t('delete.title')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete &ldquo;{runtime.name}&rdquo;? This action cannot be undone.
+              {t('delete.description')} &ldquo;{runtime.name}&rdquo;? {t('delete.cannotUndo')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -223,7 +225,7 @@ export function RuntimeDetail({ runtime }: { runtime: AgentRuntime }) {
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? t('delete.deleting') : t('delete.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

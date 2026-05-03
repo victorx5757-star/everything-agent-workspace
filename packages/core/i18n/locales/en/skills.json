@@ -1,0 +1,63 @@
+{
+  "title": "Skills",
+  "addSkill": "Add Workspace Skill",
+  "createOrImport": "Create a new skill or import from ClawHub / Skills.sh",
+  "import": "Import",
+  "createSkill": "Create skill",
+  "fields": {
+    "name": "Name",
+    "namePlaceholder": "e.g. Code Review, Bug Triage",
+    "description": "Description",
+    "descriptionPlaceholder": "Brief description of what this skill does",
+    "url": "Skill URL",
+    "urlPlaceholder": "Paste a skill URL...",
+    "filePath": "File Path",
+    "filePathPlaceholder": "e.g. templates/review.md"
+  },
+  "sources": {
+    "supported": "Supported sources",
+    "clawHub": "ClawHub",
+    "skillsDotSh": "Skills.sh"
+  },
+  "messages": {
+    "importFailed": "Import failed",
+    "importingClawHub": "Importing from ClawHub...",
+    "importingSkillsSh": "Importing from Skills.sh...",
+    "importing": "Importing...",
+    "created": "Skill created",
+    "imported": "Skill imported",
+    "saved": "Skill saved",
+    "saving": "Saving...",
+    "failedToSave": "Failed to save skill",
+    "deleted": "Skill deleted",
+    "failedToDelete": "Failed to delete skill",
+    "failedToLoadFiles": "Failed to load skill files",
+    "fileExists": "File already exists"
+  },
+  "noSkills": "No workspace skills yet",
+  "skillsDescription": "Workspace skills are shared across your team and injected into agent runs. Skills already installed in your local runtime are used automatically.",
+  "skillsAutoAvailable": "Skills already installed in your local runtime are automatically available",
+  "selectSkill": "Select a skill to view details",
+  "selectSkillDescription": "Workspace skills supplement your local skills and are shared across the team.",
+  "tabs": {
+    "files": "Files",
+    "addFile": "Add file",
+    "deleteFile": "Delete file",
+    "preview": "Preview",
+    "noFiles": "No files"
+  },
+  "deleteConfirm": "Delete skill?",
+  "deleteWarning": "This will permanently delete \"{{name}}\" and remove it from all agents.",
+  "placeholders": {
+    "markdown": "Write markdown content...",
+    "fileContent": "File content...",
+    "noContent": "No content yet",
+    "skillName": "Skill name"
+  },
+  "actions": {
+    "add": "Add",
+    "addFile": "Add File"
+  },
+  "fileCount": "{{count}} file",
+  "fileCount_plural": "{{count}} files"
+}

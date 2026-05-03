@@ -18,12 +18,14 @@ import { runtimeListOptions } from "@multica/core/runtimes/queries";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useWorkspaceId } from "@multica/core/hooks";
 import { agentListOptions, memberListOptions, workspaceKeys } from "@multica/core/workspace/queries";
+import { useTranslation } from "@multica/core/i18n";
 import { PageHeader } from "../../layout/page-header";
 import { CreateAgentDialog } from "./create-agent-dialog";
 import { AgentListItem } from "./agent-list-item";
 import { AgentDetail } from "./agent-detail";
 
 export function AgentsPage() {
+  const { t } = useTranslation("agents");
   const isLoading = useAuthStore((s) => s.isLoading);
   const currentUser = useAuthStore((s) => s.user);
   const qc = useQueryClient();
@@ -45,7 +47,6 @@ export function AgentsPage() {
 
   const archivedCount = useMemo(() => agents.filter((a) => !!a.archived_at).length, [agents]);
 
-  // Select first agent on initial load or when filter changes
   useEffect(() => {
     if (filteredAgents.length > 0 && !filteredAgents.some((a) => a.id === selectedId)) {
       setSelectedId(filteredAgents[0]!.id);
@@ -62,9 +63,9 @@ export function AgentsPage() {
     try {
       await api.updateAgent(id, data as UpdateAgentRequest);
       qc.invalidateQueries({ queryKey: workspaceKeys.agents(wsId) });
-      toast.success("Agent updated");
+      toast.success(t("updated"));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to update agent");
+      toast.error(e instanceof Error ? e.message : t("failedToUpdate"));
       throw e;
     }
   };
@@ -73,9 +74,9 @@ export function AgentsPage() {
     try {
       await api.archiveAgent(id);
       qc.invalidateQueries({ queryKey: workspaceKeys.agents(wsId) });
-      toast.success("Agent archived");
+      toast.success(t("archived"));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to archive agent");
+      toast.error(e instanceof Error ? e.message : t("failedToArchive"));
     }
   };
 
@@ -83,9 +84,9 @@ export function AgentsPage() {
     try {
       await api.restoreAgent(id);
       qc.invalidateQueries({ queryKey: workspaceKeys.agents(wsId) });
-      toast.success("Agent restored");
+      toast.success(t("restored"));
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to restore agent");
+      toast.error(e instanceof Error ? e.message : t("failedToRestore"));
     }
   };
 
@@ -94,7 +95,6 @@ export function AgentsPage() {
   if (isLoading) {
     return (
       <div className="flex flex-1 min-h-0">
-        {/* List skeleton */}
         <div className="w-72 border-r">
           <div className="flex h-12 items-center justify-between border-b px-4">
             <Skeleton className="h-4 w-16" />
@@ -112,7 +112,6 @@ export function AgentsPage() {
             ))}
           </div>
         </div>
-        {/* Detail skeleton */}
         <div className="flex-1 p-6 space-y-6">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-full" />
@@ -139,17 +138,16 @@ export function AgentsPage() {
       onLayoutChanged={onLayoutChanged}
     >
       <ResizablePanel id="list" defaultSize={280} minSize={240} maxSize={400} groupResizeBehavior="preserve-pixel-size">
-        {/* Left column — agent list */}
         <div className="overflow-y-auto h-full border-r">
           <PageHeader className="justify-between">
-            <h1 className="text-sm font-semibold">Agents</h1>
+            <h1 className="text-sm font-semibold">{t("title")}</h1>
             <div className="flex items-center gap-1">
               {archivedCount > 0 && (
                 <Button
                   variant={showArchived ? "secondary" : "ghost"}
                   size="icon-sm"
                   onClick={() => setShowArchived(!showArchived)}
-                  title={showArchived ? "Show active agents" : "Show archived agents"}
+                  title={showArchived ? t("showActive") : t("showArchived")}
                 >
                   <Archive className="text-muted-foreground" />
                 </Button>
@@ -167,7 +165,7 @@ export function AgentsPage() {
             <div className="flex flex-col items-center justify-center px-4 py-12">
               <Bot className="h-8 w-8 text-muted-foreground/40" />
               <p className="mt-3 text-sm text-muted-foreground">
-                {showArchived ? "No archived agents" : archivedCount > 0 ? "No active agents" : "No agents yet"}
+                {showArchived ? t("noArchived") : archivedCount > 0 ? t("noActive") : t("noAgents")}
               </p>
               {!showArchived && (
                 <Button
@@ -176,7 +174,7 @@ export function AgentsPage() {
                   className="mt-3"
                 >
                   <Plus className="h-3 w-3" />
-                  Create Agent
+                  {t("createAgent")}
                 </Button>
               )}
             </div>
@@ -198,7 +196,6 @@ export function AgentsPage() {
       <ResizableHandle />
 
       <ResizablePanel id="detail" minSize="50%">
-        {/* Right column — agent detail */}
         {selected ? (
           <AgentDetail
             key={selected.id}
@@ -213,14 +210,14 @@ export function AgentsPage() {
         ) : (
           <div className="flex h-full flex-col items-center justify-center text-muted-foreground">
             <Bot className="h-10 w-10 text-muted-foreground/30" />
-            <p className="mt-3 text-sm">Select an agent to view details</p>
+            <p className="mt-3 text-sm">{t("selectAgent")}</p>
             <Button
               onClick={() => setShowCreate(true)}
               size="xs"
               className="mt-3"
             >
               <Plus className="h-3 w-3" />
-              Create Agent
+              {t("createAgent")}
             </Button>
           </div>
         )}
