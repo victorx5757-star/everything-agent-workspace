@@ -237,6 +237,22 @@
     "replyCount_other": "{{count}} 条回复",
     "leaveReply": "留下回复..."
   },
+  "display": {
+    "boardView": "看板视图",
+    "listView": "列表视图",
+    "view": "视图",
+    "board": "看板",
+    "list": "列表",
+    "issue": "{{count}} 个问题",
+    "issue_other": "{{count}} 个问题",
+    "resetAllFilters": "重置所有筛选",
+    "filter": "筛选",
+    "displaySettings": "显示设置",
+    "ordering": "排序",
+    "cardProperties": "卡片属性",
+    "ascending": "升序",
+    "descending": "降序"
+  },
   "activity": {
     "createdThisIssue": "创建了此问题",
     "changedStatusFrom": "将状态从 {{from}} 更改为 {{to}}",
@@ -251,5 +267,13 @@
     "updatedDescription": "更新了描述",
     "completedTask": "完成了任务",
     "taskFailed": "任务失败"
+  },
+  "scope": {
+    "all": "全部",
+    "allDescription": "此工作区的所有问题",
+    "members": "成员",
+    "membersDescription": "分配给团队成员的问题",
+    "agents": "代理",
+    "agentsDescription": "分配给 AI 代理的问题"
   }
 }

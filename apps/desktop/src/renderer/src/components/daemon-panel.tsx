@@ -110,7 +110,7 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
     const result = await window.daemonAPI.start();
     setActionLoading(false);
     if (!result.success) {
-      toast.error("Failed to start daemon", { description: result.error });
+      toast.error(t("daemon.failedToStart"), { description: result.error });
     }
   }, []);
 
@@ -119,7 +119,7 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
     const result = await window.daemonAPI.stop();
     setActionLoading(false);
     if (!result.success) {
-      toast.error("Failed to stop daemon", { description: result.error });
+      toast.error(t("daemon.failedToStop"), { description: result.error });
     }
   }, []);
 
@@ -128,7 +128,7 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
     const result = await window.daemonAPI.restart();
     setActionLoading(false);
     if (!result.success) {
-      toast.error("Failed to restart daemon", { description: result.error });
+      toast.error(t("daemon.failedToRestart"), { description: result.error });
     }
   }, []);
 
@@ -145,7 +145,7 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
         <SheetHeader className="flex-row items-center justify-between gap-2 pr-3">
           <SheetTitle className="flex items-center gap-2">
             <Server className="size-4" />
-            Local Daemon
+            {t("daemon.title")}
           </SheetTitle>
           <button
             type="button"
@@ -206,13 +206,12 @@ export function DaemonPanel({ open, onOpenChange, status }: DaemonPanelProps) {
           {/* Actions */}
           {status.state === "installing_cli" ? (
             <div className="rounded-lg border border-dashed p-3 text-sm text-muted-foreground">
-              Setting up the local runtime… this only happens the first time.
+              {t("daemon.settingUp")}
             </div>
           ) : status.state === "cli_not_found" ? (
             <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 space-y-2">
               <p className="text-sm">
-                Couldn&apos;t download the local runtime. Check your network
-                connection and try again.
+                {t("daemon.setupFailed")}
               </p>
               <Button
                 size="sm"

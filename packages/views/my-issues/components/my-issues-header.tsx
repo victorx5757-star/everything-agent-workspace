@@ -48,6 +48,7 @@ import {
 import { Tooltip, TooltipTrigger, TooltipContent } from "@multica/ui/components/ui/tooltip";
 import type { Issue } from "@multica/core/types";
 import { myIssuesViewStore, type MyIssuesScope } from "@multica/core/issues/stores/my-issues-view-store";
+import { useTranslation } from "@multica/core/i18n";
 
 // ---------------------------------------------------------------------------
 // HoverCheck
@@ -99,17 +100,21 @@ function useIssueCounts(allIssues: Issue[]) {
 // Scope config
 // ---------------------------------------------------------------------------
 
-const SCOPES: { value: MyIssuesScope; label: string; description: string }[] = [
-  { value: "assigned", label: "Assigned", description: "Issues assigned to me" },
-  { value: "created", label: "Created", description: "Issues I created" },
-  { value: "agents", label: "My Agents", description: "Issues assigned to my agents" },
-];
+function getScopes(t: (key: string) => string) {
+  return [
+    { value: "assigned" as MyIssuesScope, label: t("myScope.assigned"), description: t("myScope.assignedDescription") },
+    { value: "created" as MyIssuesScope, label: t("myScope.created"), description: t("myScope.createdDescription") },
+    { value: "agents" as MyIssuesScope, label: t("myScope.myAgents"), description: t("myScope.myAgentsDescription") },
+  ];
+}
 
 // ---------------------------------------------------------------------------
 // MyIssuesHeader
 // ---------------------------------------------------------------------------
 
 export function MyIssuesHeader({ allIssues }: { allIssues: Issue[] }) {
+  const { t } = useTranslation("issues");
+  const { t: tc } = useTranslation("common");
   const viewMode = useStore(myIssuesViewStore, (s) => s.viewMode);
   const statusFilters = useStore(myIssuesViewStore, (s) => s.statusFilters);
   const priorityFilters = useStore(myIssuesViewStore, (s) => s.priorityFilters);
@@ -118,6 +123,8 @@ export function MyIssuesHeader({ allIssues }: { allIssues: Issue[] }) {
   const cardProperties = useStore(myIssuesViewStore, (s) => s.cardProperties);
   const scope = useStore(myIssuesViewStore, (s) => s.scope);
   const act = myIssuesViewStore.getState();
+
+  const SCOPES = getScopes(t);
 
   const counts = useIssueCounts(allIssues);
 
@@ -367,7 +374,7 @@ export function MyIssuesHeader({ allIssues }: { allIssues: Issue[] }) {
               }
             />
             <TooltipContent side="bottom">
-              {viewMode === "board" ? "Board view" : "List view"}
+              {viewMode === "board" ? tc("boardView") : tc("listView")}
             </TooltipContent>
           </Tooltip>
           <DropdownMenuContent align="end" className="w-auto">

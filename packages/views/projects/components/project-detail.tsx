@@ -303,7 +303,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
         <TitleEditor
           key={`title-${projectId}`}
           defaultValue={project.title}
-          placeholder="Project title"
+          placeholder={t('properties.titlePlaceholder')}
           className="mt-2 w-full text-base font-semibold leading-snug tracking-tight"
           onBlur={(value) => {
             const trimmed = value.trim();
@@ -509,7 +509,7 @@ export function ProjectDetail({ projectId }: { projectId: string }) {
                 variant="ghost"
                 size="icon-sm"
                 className={cn("text-muted-foreground", isPinned && "text-foreground")}
-                title={isPinned ? "Unpin from sidebar" : "Pin to sidebar"}
+                title={isPinned ? t("unpinFromSidebar") : t("pinToSidebar")}
                 onClick={() => {
                   if (isPinned) {
                     deletePinMut.mutate({ itemType: "project", itemId: projectId });

@@ -237,6 +237,22 @@
     "replyCount_other": "{{count}} replies",
     "leaveReply": "Leave a reply..."
   },
+  "display": {
+    "boardView": "Board view",
+    "listView": "List view",
+    "view": "View",
+    "board": "Board",
+    "list": "List",
+    "issue": "{{count}} issue",
+    "issue_other": "{{count}} issues",
+    "resetAllFilters": "Reset all filters",
+    "filter": "Filter",
+    "displaySettings": "Display settings",
+    "ordering": "Ordering",
+    "cardProperties": "Card properties",
+    "ascending": "Ascending",
+    "descending": "Descending"
+  },
   "activity": {
     "createdThisIssue": "created this issue",
     "changedStatusFrom": "changed status from {{from}} to {{to}}",
@@ -251,5 +267,13 @@
     "updatedDescription": "updated the description",
     "completedTask": "completed the task",
     "taskFailed": "task failed"
+  },
+  "scope": {
+    "all": "All",
+    "allDescription": "All issues in this workspace",
+    "members": "Members",
+    "membersDescription": "Issues assigned to team members",
+    "agents": "Agents",
+    "agentsDescription": "Issues assigned to AI agents"
   }
 }

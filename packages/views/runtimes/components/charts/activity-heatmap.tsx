@@ -156,7 +156,7 @@ export function ActivityHeatmap({ usage }: { usage: RuntimeUsage[] }) {
             style={{ backgroundColor: getHeatmapColor(level) }}
           />
         ))}
-        <span>More</span>
+        <span>{t('heatmap.more')}</span>
       </div>
     </div>
   );

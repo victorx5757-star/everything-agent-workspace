@@ -389,15 +389,15 @@ export function AutopilotsPage() {
                 const Icon = tpl.icon;
                 return (
                   <button
-                    key={tpl.title}
+                    key={tpl.titleKey}
                     type="button"
                     className="flex items-start gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent/40"
                     onClick={() => openCreate(tpl)}
                   >
                     <Icon className="h-5 w-5 shrink-0 text-muted-foreground mt-0.5" />
                     <div className="min-w-0">
-                      <div className="text-sm font-medium">{t(tpl.titleKey, tpl.title)}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{t(tpl.summaryKey, tpl.summary)}</div>
+                      <div className="text-sm font-medium">{t(tpl.titleKey)}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{t(tpl.summaryKey)}</div>
                     </div>
                   </button>
                 );
